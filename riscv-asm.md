@@ -281,7 +281,8 @@ Floating-point rounding modes
 
 For floating-point instructions with a rounding mode field, the rounding mode
 can be specified by adding an additional operand. e.g. `fcvt.w.s` with
-round-to-zero can be specified as `fcvt.w.s a0, fa0, rtz`.
+round-to-zero can be written as `fcvt.w.s a0, fa0, rtz`. If unspecified, the
+default `dyn` rounding mode will be used.
 
 Supported rounding modes are as follows (must be specified in lowercase):
 * `rne`: round to nearest, ties to even
