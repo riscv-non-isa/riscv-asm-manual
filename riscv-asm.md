@@ -6,6 +6,7 @@ The RISC-V Assembly Programmer's Manual is
 
   &copy; 2017 Palmer Dabbelt <palmer@dabbelt.com>
   &copy; 2017 Michael Clark <michaeljclark@mac.com>
+  &copy; 2017 Alex Bradbury <asb@lowrisc.org>
 
 It is licensed under the Creative Commons Attribution 4.0 International License
 (CC-BY 4.0). The full license text is available at
@@ -274,6 +275,22 @@ puts:
 msg:
 	    .string "Hello World\n"
 ```
+
+Floating-point rounding modes
+-----------------------------
+
+For floating-point instructions with a rounding mode field, the rounding mode
+can be specified by adding an additional operand. e.g. `fcvt.w.s` with
+round-to-zero can be specified as `fcvt.w.s a0, fa0, rtz`.
+
+Supported rounding modes are as follows (must be specified in lowercase):
+* `rne`: round to nearest, ties to even
+* `rtz`: round towards zero
+* `rdn`: round down
+* `rup`: round up
+* `rmm`: round to nearest, ties to max magnitude
+* `dyn`: dynamic rounding mode (the rounding mode specified in the `frm` field
+of the `fcsr` register is used)
 
 Control and Status Registers
 ---------------------------------
