@@ -240,7 +240,7 @@ The following example shows loading a constant using the %hi and
         addi a0, a0, %lo(UART_BASE)
 ```
 
-This example uses the `li` pseudo instruction to load a constant
+This example uses the `li` pseudoinstruction to load a constant
 and writes a string using polled IO to a UART:
 
 ```
