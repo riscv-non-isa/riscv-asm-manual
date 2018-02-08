@@ -124,7 +124,7 @@ _start:
 	    lui a1,       %hi(msg)       # load msg(hi)
 	    addi a1, a1,  %lo(msg)       # load msg(lo)
 	    jalr ra, puts
-2:	    j2b
+2:	    j 2b
 
 .section .rodata
 msg:
@@ -154,7 +154,7 @@ _start:
 1:	    auipc a1,     %pcrel_hi(msg) # load msg(hi)
 	    addi  a1, a1, %pcrel_lo(1b)  # load msg(lo)
 	    jalr ra, puts
-2:	    j2b
+2:	    j 2b
 
 .section .rodata
 msg:
