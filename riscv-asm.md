@@ -143,13 +143,16 @@ Directive    | Arguments                      | Description
 .endm        |                                | end macro definition
 .type        | symbol, @function              | accepted for source compatibility
 .option      | {rvc,norvc,pic,nopic,push,pop} | RISC-V options
-.byte        |                                | 8-bit comma separated words
-.2byte       | expression [, expression]*     | 16-bit comma separated words (unaligned)
-.4byte       | expression [, expression]*     | 32-bit comma separated words (unaligned)
-.8byte       | expression [, expression]*     | 64-bit comma separated words (unaligned)
-.half        | expression [, expression]*     | 16-bit comma separated words (naturally aligned)
-.word        | expression [, expression]*     | 32-bit comma separated words (naturally aligned)
-.dword       | expression [, expression]*     | 64-bit comma separated words (naturally aligned)
+.byte        | expression [, expression]*     | 8-bit comma separated words
+.2byte       | expression [, expression]*     | 16-bit comma separated words
+.half        | expression [, expression]*     | 16-bit comma separated words
+.short       | expression [, expression]*     | 16-bit comma separated words
+.4byte       | expression [, expression]*     | 32-bit comma separated words
+.word        | expression [, expression]*     | 32-bit comma separated words
+.long        | expression [, expression]*     | 32-bit comma separated words
+.8byte       | expression [, expression]*     | 64-bit comma separated words
+.dword       | expression [, expression]*     | 64-bit comma separated words
+.quad        | expression [, expression]*     | 64-bit comma separated words
 .dtprelword  | expression [, expression]*     | 32-bit thread local word
 .dtpreldword | expression [, expression]*     | 64-bit thread local word
 .sleb128     | expression                     | signed little endian base 128, DWARF
