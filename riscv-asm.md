@@ -163,15 +163,19 @@ Directive    | Arguments                      | Description
 
 The following table lists assembler relocation expansions:
 
-Assembler Notation       | Description                 | Instruction / Macro
-:----------------------  | :---------------            | :-------------------
-%hi(symbol)              | Absolute (HI20)             | lui
-%lo(symbol)              | Absolute (LO12)             | load, store, add
-%pcrel_hi(symbol)        | PC-relative (HI20)          | auipc
-%pcrel_lo(label)         | PC-relative (LO12)          | load, store, add
-%tprel_hi(symbol)        | TLS LE "Local Exec"         | auipc
-%tprel_lo(label)         | TLS LE "Local Exec"         | load, store, add
-%tprel_add(offset)       | TLS LE "Local Exec"         | add
+Assembler Notation          | Description                    | Instruction / Macro
+:----------------------     | :---------------               | :-------------------
+%hi(symbol)                 | Absolute (HI20)                | lui
+%lo(symbol)                 | Absolute (LO12)                | load, store, add
+%pcrel_hi(symbol)           | PC-relative (HI20)             | auipc
+%pcrel_lo(label)            | PC-relative (LO12)             | load, store, add
+%tprel_hi(symbol)           | TLS LE "Local Exec"            | auipc
+%tprel_lo(label)            | TLS LE "Local Exec"            | load, store, add
+%tprel_add(offset)          | TLS LE "Local Exec"            | add
+%tls_ie_pcrel_hi(symbol) \* | TLS IE "Initial Exec" (HI20)   | auipc
+%tls_gd_pcrel_hi(symbol) \* | TLS GD "Global Dynamic" (HI20) | auipc
+
+\* These reuse %pcrel_lo(label) for their lower half
 
 Labels
 ------------
