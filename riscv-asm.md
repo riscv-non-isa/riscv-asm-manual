@@ -174,6 +174,7 @@ Assembler Notation          | Description                    | Instruction / Mac
 %tprel_add(offset)          | TLS LE "Local Exec"            | add
 %tls_ie_pcrel_hi(symbol) \* | TLS IE "Initial Exec" (HI20)   | auipc
 %tls_gd_pcrel_hi(symbol) \* | TLS GD "Global Dynamic" (HI20) | auipc
+%got_pcrel_hi(symbol) \*    | GOT PC-relative (HI20)         | auipc
 
 \* These reuse %pcrel_lo(label) for their lower half
 
