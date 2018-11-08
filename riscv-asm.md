@@ -201,9 +201,9 @@ The following example shows how to load an absolute address:
 .section .text
 .globl _start
 _start:
-	    lui a1,       %hi(msg)       # load msg(hi)
-	    addi a1, a1,  %lo(msg)       # load msg(lo)
-	    jalr ra, puts
+	    lui a0,       %hi(msg)       # load msg(hi)
+	    addi a0, a0,  %lo(msg)       # load msg(lo)
+	    jal ra, puts
 2:	    j 2b
 
 .section .rodata
@@ -231,9 +231,9 @@ The following example shows how to load a PC-relative address:
 .section .text
 .globl _start
 _start:
-1:	    auipc a1,     %pcrel_hi(msg) # load msg(hi)
-	    addi  a1, a1, %pcrel_lo(1b)  # load msg(lo)
-	    jalr ra, puts
+1:	    auipc a0,     %pcrel_hi(msg) # load msg(hi)
+	    addi  a0, a0, %pcrel_lo(1b)  # load msg(lo)
+	    jal ra, puts
 2:	    j 2b
 
 .section .rodata
