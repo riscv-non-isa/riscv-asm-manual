@@ -257,6 +257,36 @@ as seen by objdump:
 			4: R_RISCV_PCREL_LO12_I	.L11
 ```
 
+GOT-indirect addressing
+------------------------
+
+The following example shows how to load an address from the GOT:
+
+```
+.section .text
+.globl _start
+_start:
+1:	    auipc a0, %got_pcrel_hi(msg) # load msg(hi)
+	    ld    a0, %pcrel_lo(1b)(a0)  # load msg(lo)
+	    jal ra, puts
+2:	    j 2b
+
+.section .rodata
+msg:
+	    .string "Hello World\n"
+```
+
+which generates the following assembler output and relocations
+as seen by objdump:
+
+```
+0000000000000000 <_start>:
+   0:	00000517          	auipc	a0,0x0
+			0: R_RISCV_GOT_HI20	msg
+   4:	00053503          	ld	a0,0(a0) # 0 <_start>
+			4: R_RISCV_PCREL_LO12_I	.L11
+```
+
 Load Immediate
 -------------------
 
@@ -302,7 +332,7 @@ msg:
 ```
 
 which generates the following assembler output and relocations
-as seen by objdump:
+for non-PIC as seen by objdump:
 
 ```
 0000000000000000 <_start>:
@@ -310,6 +340,17 @@ as seen by objdump:
 			0: R_RISCV_PCREL_HI20	msg
    4:	00850513          	addi	a0,a0,8 # 8 <_start+0x8>
 			4: R_RISCV_PCREL_LO12_I	.L11
+```
+
+and generates the following assembler output and relocations
+for PIC as seen by objdump:
+
+```
+0000000000000000 <_start>:
+   0:	00000517          	auipc	a0,0x0
+			0: R_RISCV_GOT_HI20	msg
+   4:	00053503          	ld	a0,0(a0) # 0 <_start>
+			4: R_RISCV_PCREL_LO12_I	.L0
 ```
 
 Constants
