@@ -161,6 +161,8 @@ Directive    | Arguments                      | Description
 .balign      | b,[pad_val=0]                  | byte align
 .zero        | integer                        | zero bytes
 
+## Assembler Relocation Functions
+
 The following table lists assembler relocation expansions:
 
 Assembler Notation          | Description                    | Instruction / Macro
