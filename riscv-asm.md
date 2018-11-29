@@ -115,6 +115,12 @@ Here we can just link to the RISC-V ISA manual.
 
 ALIAS line from opcodes/riscv-opc.c
 
+To better diagnose situations where the program flow reaches an unexpected location, you might want to emit there an instruction that's known to trap. You can use an `UNIMP` pseudo-instruction, which should trap in nearly all systems. The *de facto* standard implementation of this instruction is:
+
+- `C.UNIMP`: `0000`. The all-zeroes pattern is not a valid instruction. Any system which traps on invalid instructions will thus trap on this `UNIMP` instruction form. Despite not being a valid instruction, it still fits the 16-bit (compressed) instruction format, and so `0000 0000` is interpreted as being two 16-bit `UNIMP` instructions.
+
+- `UNIMP` : `C0001073`. This is an alias for `CSRRW x0, cycle, x0`. Since `cycle` is a read-only CSR, then (whether this CSR exists or not) an attempt to write into it will generate an illegal instruction exception. This 32-bit form of `UNIMP` is emitted when targeting a system without the C extension, or when the `.option norvc` directive is used.
+
 ## Pseudo Ops
 
 Both the RISC-V-specific and GNU .-prefixed options.
