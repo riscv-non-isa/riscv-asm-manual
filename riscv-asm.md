@@ -105,11 +105,19 @@ document to describe what the relocations actually do.
 
 # Instruction Set
 
-Links to the various RISC-V ISA manuals that are supported.
+Official Specifications webpage:
+- https://riscv.org/specifications/
+
+Latest Specifications draft repository:
+- https://github.com/riscv/riscv-isa-manual
 
 ## Instructions
 
-Here we can just link to the RISC-V ISA manual.
+# RISC-V User Level ISA Specification
+https://riscv.org/specifications/
+
+# RISC-V Privileged ISA Specification
+https://riscv.org/specifications/privileged-isa/
 
 ## Instruction Aliases
 
