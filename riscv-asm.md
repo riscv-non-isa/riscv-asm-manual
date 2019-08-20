@@ -65,7 +65,7 @@ x19       | s3          | saved register 3                      | yes
 x20       | s4          | saved register 4                      | yes
 x21       | s5          | saved register 5                      | yes
 x22       | s6          | saved register 6                      | yes
-x23       | s7          | saved register 6                      | yes
+x23       | s7          | saved register 7                      | yes
 x24       | s8          | saved register 8                      | yes
 x25       | s9          | saved register 9                      | yes
 x26       | s10         | saved register 10                     | yes
