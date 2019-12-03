@@ -317,7 +317,7 @@ as seen by objdump:
 Load Immediate
 -------------------
 
-The following example shows the `li` psuedo instruction which
+The following example shows the `li` pseudo instruction which
 is used to load immediate values:
 
 ```
@@ -343,7 +343,7 @@ which generates the following assembler output as seen by objdump:
 Load Address
 -----------------
 
-The following example shows the `la` psuedo instruction which
+The following example shows the `la` pseudo instruction which
 is used to load symbol addresses:
 
 ```
