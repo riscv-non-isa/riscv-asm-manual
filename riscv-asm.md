@@ -278,9 +278,9 @@ as seen by objdump:
 
 ```
 0000000000000000 <_start>:
-   0:	00000597          	auipc	a1,0x0
+   0:	00000517          	auipc	a0,0x0
 			0: R_RISCV_PCREL_HI20	msg
-   4:	00858593          	addi	a1,a1,8 # 8 <.L21>
+   4:	00050513          	addi	a0,a0,16 # 10 <.L21>
 			4: R_RISCV_PCREL_LO12_I	.L11
 ```
 
