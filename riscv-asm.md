@@ -325,19 +325,16 @@ is used to load immediate values:
 .globl _start
 _start:
 
-.equ CONSTANT, 0xcafebabe
+.equ CONSTANT, 0xdeadbeef
 
         li a0, CONSTANT
 ```
 
-which generates the following assembler output as seen by objdump:
+which, for RV32I, generates the following assembler output, as seen by objdump:
 
 ```
-0000000000000000 <_start>:
-   0:	00033537          	lui	a0,0x33
-   4:	bfb50513          	addi	a0,a0,-1029
-   8:	00e51513          	slli	a0,a0,0xe
-   c:	abe50513          	addi	a0,a0,-1346
+   0:   deadc537                lui     a0,0xdeadc
+   4:   eef50513                addi    a0,a0,-273
 ```
 
 Load Address
