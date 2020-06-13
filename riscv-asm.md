@@ -150,7 +150,7 @@ Directive    | Arguments                      | Description
 :----------- | :-------------                 | :---------------
 .align       | integer                        | align to power of 2 (alias for .p2align)
 .file        | "filename"                     | emit filename FILE LOCAL symbol table
-.globl       | symbol_name                    | emit symbol_name to symbol table (scope GLOBAL)
+.global      | symbol_name                    | emit symbol_name to symbol table (scope GLOBAL)
 .local       | symbol_name                    | emit symbol_name to symbol table (scope LOCAL)
 .comm        | symbol_name,size,align         | emit common object to .bss section
 .common      | symbol_name,size,align         | emit common object to .bss section
