@@ -202,8 +202,16 @@ Assembler Notation          | Description                    | Instruction / Mac
 %tls_ie_pcrel_hi(symbol) \* | TLS IE "Initial Exec" (HI20)   | auipc
 %tls_gd_pcrel_hi(symbol) \* | TLS GD "Global Dynamic" (HI20) | auipc
 %got_pcrel_hi(symbol) \*    | GOT PC-relative (HI20)         | auipc
+%gprel_hi(symbol)           | GP-relative (HI20)             | lui
+%gprel_lo(symbol)           | GP-relative (LO12)             | load, store, add
+%gprel(symbol)              | GP-relative                    | load, store, add
+%got_gprel_hi(symbol)       | GP-relative GOT (HI20)         | lui
+%got_gprel_lo(symbol)       | GP-relative GOT (LO12)         | load, store, add
+%got_gprel(symbol)          | GP-relative GOT                | load, store, add
 
-\* These reuse %pcrel_lo(label) for their lower half
+\* These reuse `%pcrel_lo(label)` for their lower half,
+where _label_ is the position of the relocation function for the high half.
+
 
 Labels
 ------------
