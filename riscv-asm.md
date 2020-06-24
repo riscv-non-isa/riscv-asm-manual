@@ -432,14 +432,20 @@ Function Calls
 The following pseudo instructions are available to call subroutines far from
 the current position:
 
-  * `call	<symbol>`: call away subroutine
-  * `tail	<symbol>`: tail call away subroutine
+  * `call	<rd>, <symbol>`: call away subroutine[^1]
+  * `tail	<symbol>`: tail call away subroutine[^2]
+  * `jump	<symbol>, <rt>`: jump to away routine[^3]
+
+[^1]: `<rd>`, if specified, or `ra` otherwise, is used to save the return address.
+[^2]: `t1` is used implicitly by this pseudo instruction.
+[^3]: similar to `tail`, but the register used is explictly specified.
 
 The following example shows how these pseudo instructions are used:
 
 ```assembly
 	call	func1
 	tail	func2
+	jump	func3, t0
 ```
 
 Which generates the following assembler output and relocations
@@ -453,7 +459,9 @@ as seen by `objdump`:
    8:	00000317          	auipc	t1,0x0
 			8: R_RISCV_CALL	func2
    c:	00030067          	jr	t1 # 0x8
-
+  10:	00000297          	auipc	t0,0x0
+			10: R_RISCV_CALL	func3
+  14:	00028067          	jr	t0 # 0x10
 ```
 
 Floating-point rounding modes
