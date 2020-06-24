@@ -426,6 +426,36 @@ msg:
 	    .string "Hello World\n"
 ```
 
+Function Calls
+--------------
+
+The following pseudo instructions are available to call subroutines far from
+the current position:
+
+  * `call	<symbol>`: call away subroutine
+  * `tail	<symbol>`: tail call away subroutine
+
+The following example shows how these pseudo instructions are used:
+
+```assembly
+	call	func1
+	tail	func2
+```
+
+Which generates the following assembler output and relocations
+as seen by `objdump`:
+
+```
+0000000000000000 <.text>:
+   0:	00000097          	auipc	ra,0x0
+			0: R_RISCV_CALL	func1
+   4:	000080e7          	jalr	ra # 0x0
+   8:	00000317          	auipc	t1,0x0
+			8: R_RISCV_CALL	func2
+   c:	00030067          	jr	t1 # 0x8
+
+```
+
 Floating-point rounding modes
 -----------------------------
 
