@@ -351,8 +351,8 @@ global objects:
 
   * `l{b|h|w|d} <rd>, <symbol>`: load byte, half word, word or double word from global
   * `s{b|h|w|d} <rd>, <symbol>, <rt>`: store byte, half word, word or double word to global
-  * `fl{w|d} <rd>, <symbol>, <rt>`: load float or double from global
-  * `fs{w|d} <rd>, <symbol>, <rt>`: store float or double to global
+  * `fl{h|w|d|q} <rd>, <symbol>, <rt>`: load half, float, double or quad precision from global
+  * `fs{h|w|d|q} <rd>, <symbol>, <rt>`: store half, float, double or quad precision to global
 
 The following example shows how these pseudo instructions are used:
 
