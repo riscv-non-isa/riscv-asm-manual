@@ -349,6 +349,50 @@ for PIC as seen by `objdump`:
 			4: R_RISCV_PCREL_LO12_I	.L0
 ```
 
+When used with the `%gprel` relocation function,
+the `la` pseudo instruction
+is used to load symbol addresses relative to the `gp`,
+as in the compact code model:
+
+```assembly
+	la a0, %gprel(msg + 1)
+```
+
+Which generates the following assembler output and relocations
+as seen by `objdump`:
+
+```assembly
+0000000000000000 <.text>:
+   0:	00000537          	lui	a0,0x0
+			0: R_RISCV_GPREL_HI20	msg+0x1
+   4:	00350533          	add	a0,a0,gp
+			4: R_RISCV_GPREL_ADD	msg+0x1
+   8:	00150513          	addi	a0,a0,1 # 0x1
+			8: R_RISCV_GPREL_LO12_I	msg+0x1
+```
+
+When used with the `%got_gprel` relocation function,
+the `la` pseudo instruction
+is used to load symbol addresses in the GOT relative to the `gp`,
+as in the compact code model:
+
+```assembly
+	la a0, %got_gprel(msg + 1)
+```
+
+Which generates the following assembler output and relocations
+as seen by `objdump`:
+
+```assembly
+0000000000000000 <.text>:
+   0:	00000537          	lui	a0,0x0
+			0: R_RISCV_GOT_GPREL_HI20	msg+0x1
+   4:	00350533          	add	a0,a0,gp
+			4: R_RISCV_GOT_GPREL_ADD	msg+0x1
+   8:	00153503          	ld	a0,1(a0) # 0x1
+			8: R_RISCV_GOT_GOT_GPREL_LO12_I	msg+0x1
+```
+
 Load and Store Global
 ---------------------
 
@@ -436,6 +480,49 @@ as seen by `objdump`:
 			18: R_RISCV_PCREL_HI20	var4
   1c:	00a2b027          	fsd	fa0,0(t0) # 18 <.text+0x18>
 			1c: R_RISCV_PCREL_LO12_S	.L0
+```
+
+When used with the `%gprel` relocation function,
+the load and store pseudo instructions
+are used to load symbol addresses relative to the `gp`,
+as in the compact code model:
+
+```assembly
+	lw	a0, %gprel(var1)
+	fld	fa0, %gprel(var2), t0
+	sw	a0, %gprel(var3), t0
+	fsd	fa0, %gprel(var4), t0
+```
+
+Which generates the following assembler output and relocations
+as seen by `objdump`:
+
+```assembly
+0000000000000000 <.text>:
+   0:	00000537          	lui	a0,0x0
+			0: R_RISCV_GPREL_HI20	var1
+   4:	00350533          	add	a0,a0,gp
+			4: R_RISCV_GPREL_ADD	var1
+   8:	00052503          	lw	a0,0(a0)
+			8: R_RISCV_GPREL_LO12_I	var1
+   c:	000002b7          	lui	t0,0x0
+			c: R_RISCV_GPREL_HI20	var2
+  10:	003282b3          	add	t0,t0,gp
+			10: R_RISCV_GPREL_ADD	var2
+  14:	0002b507          	fld	fa0,0(t0)
+			14: R_RISCV_GPREL_LO12_I	var2
+  18:	000002b7          	lui	t0,0x0
+			18: R_RISCV_GPREL_HI20	var3
+  1c:	003282b3          	add	t0,t0,gp
+			1c: R_RISCV_GPREL_ADD	var3
+  20:	00a2a023          	sw	a0,0(t0)
+			20: R_RISCV_GPREL_LO12_S	var3
+  24:	000002b7          	lui	t0,0x0
+			24: R_RISCV_GPREL_HI20	var4
+  28:	003282b3          	add	t0,t0,gp
+			28: R_RISCV_GPREL_ADD	var4
+  1c:	00a2b027          	fsd	fa0,0(t0)
+			1c: R_RISCV_GPREL_LO12_S	var4
 ```
 
 Constants
