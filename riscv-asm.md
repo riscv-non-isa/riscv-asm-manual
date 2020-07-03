@@ -304,11 +304,9 @@ is used to load immediate values:
 Which, for RV32I, generates the following assembler output, as seen by `objdump`:
 
 ```assembly
-0000000000000000 <.text>:
-   0:	00038537          	lui	a0,0x38
-   4:	ab75051b          	addiw	a0,a0,-1353
-   8:	00e51513          	slli	a0,a0,0xe
-   c:	eef50513          	addi	a0,a0,-273 # 37eef <CONSTANT-0xdeaa4000>
+00000000 <.text>:
+   0:	deadc537          	lui	a0,0xdeadc
+   4:	eef50513          	addi	a0,a0,-273 # deadbeef <CONSTANT+0x0>
 ```
 
 Load Address
