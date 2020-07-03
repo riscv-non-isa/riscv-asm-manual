@@ -383,10 +383,13 @@ Load and Store Global
 The following pseudo instructions are available to load from and store to
 global objects:
 
-  * `l{b|h|w|d} <rd>, <symbol>`: load byte, half word, word or double word from global
-  * `s{b|h|w|d} <rd>, <symbol>, <rt>`: store byte, half word, word or double word to global
-  * `fl{h|w|d|q} <rd>, <symbol>, <rt>`: load half, float, double or quad precision from global
-  * `fs{h|w|d|q} <rd>, <symbol>, <rt>`: store half, float, double or quad precision to global
+  * `l{b|h|w|d} <rd>, <symbol>`: load byte, half word, word or double word from global[^1]
+  * `s{b|h|w|d} <rd>, <symbol>, <rt>`: store byte, half word, word or double word to global[^2]
+  * `fl{h|w|d|q} <rd>, <symbol>, <rt>`: load half, float, double or quad precision from global[^2]
+  * `fs{h|w|d|q} <rd>, <symbol>, <rt>`: store half, float, double or quad precision to global[^2]
+
+[^1]: the first operand is implicitly used as a scratch register.
+[^2]: the last operand specifies the scratch register to be used.
 
 The following example shows how these pseudo instructions are used:
 
@@ -475,13 +478,15 @@ Function Calls
 The following pseudo instructions are available to call subroutines far from
 the current position:
 
-  * `call	<rd>, <symbol>`: call away subroutine[^1]
-  * `tail	<symbol>`: tail call away subroutine[^2]
-  * `jump	<symbol>, <rt>`: jump to away routine[^3]
+  * `call	<symbol>`: call away subroutine[^1]
+  * `call	<rd>, <symbol>`: call away subroutine[^2]
+  * `tail	<symbol>`: tail call away subroutine[^3]
+  * `jump	<symbol>, <rt>`: jump to away routine[^4]
 
-[^1]: `<rd>`, if specified, or `ra` otherwise, is used to save the return address.
-[^2]: `t1` is used implicitly by this pseudo instruction.
-[^3]: similar to `tail`, but the register used is explictly specified.
+[*1]: `ra` is implicitly used to save the return address.
+[^2]: similar to `call <symbol>`, but `<rd>` is used to save the return address instead.
+[^3]: `t1` is implicitly used as a scratch register.
+[^4]: similar to `tail <symbol>`, but `<rt>` is used as the scratch register instead.
 
 The following example shows how these pseudo instructions are used:
 
