@@ -501,7 +501,7 @@ the current position:
   * `tail	<symbol>`: tail call away subroutine[^3]
   * `jump	<symbol>, <rt>`: jump to away routine[^4]
 
-[*1]: `ra` is implicitly used to save the return address.
+[^1]: `ra` is implicitly used to save the return address.
 [^2]: similar to `call <symbol>`, but `<rd>` is used to save the return address instead.
 [^3]: `t1` is implicitly used as a scratch register.
 [^4]: similar to `tail <symbol>`, but `<rt>` is used as the scratch register instead.
