@@ -205,9 +205,11 @@ Assembler Notation          | Description                    | Instruction / Mac
 %gprel_hi(symbol)           | GP-relative (HI20)             | lui
 %gprel_lo(symbol)           | GP-relative (LO12)             | load, store, add
 %gprel(symbol)              | GP-relative                    | load, store, add
+%gprel_add(symbol)          | GP-relative                    | add
 %got_gprel_hi(symbol)       | GP-relative GOT (HI20)         | lui
 %got_gprel_lo(symbol)       | GP-relative GOT (LO12)         | load, store, add
 %got_gprel(symbol)          | GP-relative GOT                | load, store, add
+%got_gprel_add(symbol)      | GP-relative GOT                | add
 
 \* These reuse `%pcrel_lo(label)` for their lower half,
 where _label_ is the position of the relocation function for the high half.
@@ -355,7 +357,7 @@ is used to load symbol addresses relative to the `gp`,
 as in the compact code model:
 
 ```assembly
-	la a0, %gprel(msg + 1)
+	lla a0, %gprel(msg + 1)
 ```
 
 Which generates the following assembler output and relocations
@@ -390,7 +392,7 @@ as seen by `objdump`:
    4:	00350533          	add	a0,a0,gp
 			4: R_RISCV_GOT_GPREL_ADD	msg+0x1
    8:	00153503          	ld	a0,1(a0) # 0x1
-			8: R_RISCV_GOT_GOT_GPREL_LO12_I	msg+0x1
+			8: R_RISCV_GOT_GPREL_LO12_I	msg+0x1
 ```
 
 Load and Store Global
