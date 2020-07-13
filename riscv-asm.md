@@ -352,8 +352,8 @@ for PIC as seen by `objdump`:
 ```
 
 When used with the `%gprel` relocation function,
-the `la` pseudo instruction
-is used to load symbol addresses relative to the `gp`,
+the `lla` pseudo instruction
+is used to load local symbol addresses relative to the `gp`,
 as in the compact code model:
 
 ```assembly
@@ -375,7 +375,7 @@ as seen by `objdump`:
 
 When used with the `%got_gprel` relocation function,
 the `la` pseudo instruction
-is used to load symbol addresses in the GOT relative to the `gp`,
+is used to load global symbol addresses in the GOT relative to the `gp`,
 as in the compact code model:
 
 ```assembly
