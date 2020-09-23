@@ -24,7 +24,7 @@ types, depending on which extensions are included: The general registers (with
 the program counter), control registers, floating point registers (F extension),
 and vector registers (V extension).
 
-## General registers 
+## General registers
 
 The RV32I base integer ISA includes 32 registers, named `x0` to `x31`. The
 program counter `PC` is separate from these registers, in contrast to other
@@ -40,10 +40,12 @@ binary interface** (ABI). This is what you will usually see in code listings. If
 you really want to see the numeric register names, the `-M` argument to objdump
 will provide them.
 
+(See [this SO thread](https://stackoverflow.com/questions/9268586/what-are-callee-and-caller-saved-registers) to understand what the 4th column means)
+
 Register  | ABI         | Use by convention                     | Preserved?
 :-------- | :---------- | :---------------                      | ------
 x0        | zero        | hardwired to 0, ignores writes        | _n/a_
-x1        | ra          | return address for jumps              | no  
+x1        | ra          | return address for jumps              | no
 x2        | sp          | stack pointer                         | yes
 x3        | gp          | global pointer                        | _n/a_
 x4        | tp          | thread pointer                        | _n/a_
@@ -83,7 +85,7 @@ As a general rule, the **saved registers** `s0` to `s11` are preserved across
 function calls, while the **argument registers** `a0` to `a7` and the
 **temporary registers** `t0` to `t6` are not.  The use of the various
 specialized registers such as `sp` by convention will be discussed later in more
-detail. 
+detail.
 
 ## Control registers
 
