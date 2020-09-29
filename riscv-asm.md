@@ -449,6 +449,36 @@ as seen by `objdump`:
   14:	00028067          	jr	t0 # 0x10
 ```
 
+Branches
+--------------------
+
+Unconditional branches are implemented by the `j(al)?r?` pseudoinstructions.
+(The underlying instructions are `jalr?`.)
+The `j(al)?` targets can be any symbol or address.
+
+Conditional branches are implemented by the `b(l|g)(t|e)(z|u)?` and `b(eq|ne)z?` pseudoinstructions.
+(The underlying instructions are `b(lt|ge)u?` and `b(eq|ne)`.)
+Again, the targets can be any symbol or address.
+
+Various relaxations are performed when the target's offset from the branch exceeds the range of the underlying instruction's immediate field.  
+
+For example,
+
+```assembly
+        beqz t0, foo
+```
+
+may be relaxed to a sequence of the form
+
+```assembly
+        bnez t0, 1f
+        j    foo 
+1:
+```
+
+The `bnez` is further relaxed to `bne`, while `j` is relaxed to `jal` with a relocation.
+
+
 Floating-point rounding modes
 -----------------------------
 
