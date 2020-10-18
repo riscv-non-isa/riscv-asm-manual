@@ -113,11 +113,8 @@ Latest Specifications draft repository:
 
 ## Instructions
 
-# RISC-V User Level ISA Specification
+# RISC-V ISA Specifications
 https://riscv.org/specifications/
-
-# RISC-V Privileged ISA Specification
-https://riscv.org/specifications/privileged-isa/
 
 ## Instruction Aliases
 
