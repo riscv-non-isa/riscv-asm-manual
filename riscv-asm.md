@@ -545,12 +545,12 @@ mv rd, rs                    | addi rd, rs, 0                                   
 not rd, rs                   | xori rd, rs, -1                                               | One’s complement
 neg rd, rs                   | sub rd, x0, rs                                                | Two’s complement
 negw rd, rs                  | subw rd, x0, rs                                               | Two’s complement word
-sext.b rd, rs                | slli rd, rs, XLEN - 8; srai rd, rd, XLEN - 8                  | Sign extend byte | It will expand another instruction sequence when B extension is available*[1]
-sext.h rd, rs                | slli rd, rs, XLEN - 16; srai rd, rd, XLEN - 16                | Sign extend half word | It will expand another instruction sequence when B extension is available*[1]
+sext.b rd, rs                | slli rd, rs, XLEN - 8; srai rd, rd, XLEN - 8                  | Sign extend byte | It will expand to another instruction sequence when B extension is available*[1]
+sext.h rd, rs                | slli rd, rs, XLEN - 16; srai rd, rd, XLEN - 16                | Sign extend half word | It will expand to another instruction sequence when B extension is available*[1]
 sext.w rd, rs                | addiw rd, rs, 0                                               | Sign extend word
 zext.b rd, rs                | andi rd, rs, 255                                              | Zero extend byte
-zext.h rd, rs                | slli rd, rs, XLEN - 16; srli rd, rd, XLEN - 16                | Zero extend half word | It will expand another instruction sequence when B extension is available*[1]
-zext.w rd, rs                | slli rd, rs, XLEN - 32; srli rd, rd, XLEN - 32                | Zero extend word | It will expand another instruction sequence when B extension is available*[1]
+zext.h rd, rs                | slli rd, rs, XLEN - 16; srli rd, rd, XLEN - 16                | Zero extend half word | It will expand to another instruction sequence when B extension is available*[1]
+zext.w rd, rs                | slli rd, rs, XLEN - 32; srli rd, rd, XLEN - 32                | Zero extend word | It will expand to another instruction sequence when B extension is available*[1]
 seqz rd, rs                  | sltiu rd, rs, 1                                               | Set if = zero
 snez rd, rs                  | sltu rd, x0, rs                                               | Set if != zero
 sltz rd, rs                  | slt rd, rs, x0                                                | Set if < zero
@@ -580,7 +580,7 @@ call offset                  | auipc x6, offset[31:12]; jalr x1, x6, offset[11:0
 tail offset                  | auipc x6, offset[31:12]; jalr x0, x6, offset[11:0]            | Tail call far-away subroutine
 fence                        | fence iorw, iorw                                              | Fence on all memory and I/O
 
-* [1] We don't specific code sequence for B-extension, since B-extension still not ratified or frozen, we'll specify the expansion sequence once it's frozen.
+* [1] We don't specify the code sequence when the B-extension is present, since B-extension still not ratified or frozen. We will specify the expansion sequence once it's frozen.
 
 ## Pseudoinstructions for accessing control and status registers
 
