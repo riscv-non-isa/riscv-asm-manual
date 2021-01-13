@@ -401,49 +401,6 @@ Load and Store Global
 The following pseudo instructions are available to load from and store to
 global objects:
 
-  * `l{b|h|w|d} <rd>, <symbol>`: load byte, half word, word or double word from global
-  * `s{b|h|w|d} <rd>, <symbol>, <rt>`: store byte, half word, word or double word to global
-  * `fl{h|w|d|q} <rd>, <symbol>, <rt>`: load half, float, double or quad precision from global
-  * `fs{h|w|d|q} <rd>, <symbol>, <rt>`: store half, float, double or quad precision to global
-
-The following example shows how these pseudo instructions are used:
-
-```assembly
-	lw	a0, var1
-	fld	fa0, var2, t0
-	sw	a0, var3, t0
-	fsd	fa0, var4, t0
-```
-
-Which generates the following assembler output and relocations
-as seen by `objdump`:
-
-```
-0000000000000000 <.text>:
-   0:	00000517          	auipc	a0,0x0
-			0: R_RISCV_PCREL_HI20	var1
-   4:	00052503          	lw	a0,0(a0) # 0 <.text>
-			4: R_RISCV_PCREL_LO12_I	.L0
-   8:	00000297          	auipc	t0,0x0
-			8: R_RISCV_PCREL_HI20	var2
-   c:	0002b507          	fld	fa0,0(t0) # 8 <.text+0x8>
-			c: R_RISCV_PCREL_LO12_I	.L0
-  10:	00000297          	auipc	t0,0x0
-			10: R_RISCV_PCREL_HI20	var3
-  14:	00a2a023          	sw	a0,0(t0) # 10 <.text+0x10>
-			14: R_RISCV_PCREL_LO12_S	.L0
-  18:	00000297          	auipc	t0,0x0
-			18: R_RISCV_PCREL_HI20	var4
-  1c:	00a2b027          	fsd	fa0,0(t0) # 18 <.text+0x18>
-			1c: R_RISCV_PCREL_LO12_S	.L0
-```
-
-Load and Store Global
----------------------
-
-The following pseudo instructions are available to load from and store to
-global objects:
-
   * `l{b|h|w|d} <rd>, <symbol>`: load byte, half word, word or double word from global[^1]
   * `s{b|h|w|d} <rd>, <symbol>, <rt>`: store byte, half word, word or double word to global[^2]
   * `fl{h|w|d|q} <rd>, <symbol>, <rt>`: load half, float, double or quad precision from global[^2]
@@ -547,44 +504,6 @@ as seen by `objdump`:
 0000000000000000 <.text>:
    0:	40003537          	lui	a0,0x40003
    4:	08050513          	addi	a0,a0,128 # 40003080 <UART_BASE>
-```
-
-Function Calls
---------------
-
-The following pseudo instructions are available to call subroutines far from
-the current position:
-
-  * `call	<rd>, <symbol>`: call away subroutine[^1]
-  * `tail	<symbol>`: tail call away subroutine[^2]
-  * `jump	<symbol>, <rt>`: jump to away routine[^3]
-
-[^1]: `<rd>`, if specified, or `ra` otherwise, is used to save the return address.
-[^2]: `t1` is used implicitly by this pseudo instruction.
-[^3]: similar to `tail`, but the register used is explictly specified.
-
-The following example shows how these pseudo instructions are used:
-
-```assembly
-	call	func1
-	tail	func2
-	jump	func3, t0
-```
-
-Which generates the following assembler output and relocations
-as seen by `objdump`:
-
-```
-0000000000000000 <.text>:
-   0:	00000097          	auipc	ra,0x0
-			0: R_RISCV_CALL	func1
-   4:	000080e7          	jalr	ra # 0x0
-   8:	00000317          	auipc	t1,0x0
-			8: R_RISCV_CALL	func2
-   c:	00030067          	jr	t1 # 0x8
-  10:	00000297          	auipc	t0,0x0
-			10: R_RISCV_CALL	func3
-  14:	00028067          	jr	t0 # 0x10
 ```
 
 Function Calls
