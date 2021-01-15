@@ -190,30 +190,36 @@ Directive    | Arguments                      | Description
 
 The following table lists assembler relocation expansions:
 
-Assembler Notation          | Description                    | Instruction / Macro
-:----------------------     | :---------------               | :-------------------
-%hi(symbol)                 | Absolute (HI20)                | lui
-%lo(symbol)                 | Absolute (LO12)                | load, store, add
-%pcrel_hi(symbol)           | PC-relative (HI20)             | auipc
-%pcrel_lo(label)            | PC-relative (LO12)             | load, store, add
-%tprel_hi(symbol)           | TLS LE "Local Exec"            | lui
-%tprel_lo(symbol)           | TLS LE "Local Exec"            | load, store, add
-%tprel_add(symbol)          | TLS LE "Local Exec"            | add
-%tls_ie_pcrel_hi(symbol) \* | TLS IE "Initial Exec" (HI20)   | auipc
-%tls_gd_pcrel_hi(symbol) \* | TLS GD "Global Dynamic" (HI20) | auipc
-%got_pcrel_hi(symbol) \*    | GOT PC-relative (HI20)         | auipc
-%gprel_hi(symbol)           | GP-relative (HI20)             | lui
-%gprel_lo(symbol)           | GP-relative (LO12)             | load, store, add
-%gprel(symbol)              | GP-relative                    | load, store, add
-%gprel_add(symbol)          | GP-relative                    | add
-%got_gprel_hi(symbol)       | GP-relative GOT (HI20)         | lui
-%got_gprel_lo(symbol)       | GP-relative GOT (LO12)         | load, store, add
-%got_gprel(symbol)          | GP-relative GOT                | load, store, add
-%got_gprel_add(symbol)      | GP-relative GOT                | add
+Assembler Notation             | Description                    | Instruction / Macro
+:----------------------        | :---------------               | :-------------------
+%hi(symbol)                    | Absolute (HI20)                | `lui`
+%lo(symbol)                    | Absolute (LO12)                | load, store, `add`
+%pcrel_hi(symbol)              | PC-relative (HI20)             | `auipc`
+%pcrel_lo(label)               | PC-relative (LO12)             | load, store, `add`
+%gprel(symbol)                 | GP-relative                    | load, store
+%gprel_hi(symbol)              | GP-relative (HI20)             | `lui`
+%gprel_lo(symbol)              | GP-relative (LO12)             | load, store, `add`
+%gprel_add(symbol) \*\*        | GP-relative                    | `add`
+%tprel_hi(symbol)              | TLS LE "Local Exec"            | `lui`
+%tprel_lo(symbol)              | TLS LE "Local Exec"            | load, store, add
+%tprel_add(symbol) \*\*        | TLS LE "Local Exec"            | `add`
+%tls_ie_pcrel_hi(symbol) \*    | TLS IE "Initial Exec" (HI20)   | `auipc`
+%tls_ie_gprel_hi(symbol)       | TLS IE "Initial Exec" (HI20)   | `lui`
+%tls_ie_gprel_lo(symbol)       | TLS IE "Initial Exec" (LO12)   | load, store, `add`
+%tls_ie_gprel_add(symbol) \*\* | TLS IE "Initial Exec"          | `add`
+%tls_gd_pcrel_hi(symbol) \*    | TLS GD "Global Dynamic" (HI20) | `auipc`
+%tls_gd_gprel_hi(symbol)       | TLS GD "Global Dynamic" (HI20) | `lui`
+%tls_gd_gprel_lo(symbol)       | TLS GD "Global Dynamic" (LO12) | load, store, `add`
+%tls_gd_gprel_add(symbol)      | TLS GD "Global Dynamic"        | `add`
+%got_pcrel_hi(symbol) \*       | GOT PC-relative (HI20)         | `auipc`
+%got_gprel(symbol)             | GP-relative GOT                | load, store, `add`
+%got_gprel_hi(symbol)          | GP-relative GOT (HI20)         | `lui`
+%got_gprel_lo(symbol)          | GP-relative GOT (LO12)         | load, store, `add`
+%got_gprel_add(symbol) \*\*    | GP-relative GOT                | `add`
 
 \* These reuse `%pcrel_lo(label)` for their lower half,
 where _label_ is the position of the relocation function for the high half.
-
+\*\* These are used to indicate oportunities for relaxation to the linker.
 
 Labels
 ------------
@@ -277,6 +283,31 @@ as seen by `objdump`:
 			4: R_RISCV_PCREL_LO12_I	.L1
 ```
 
+The following example shows how to load an address relative
+to `\_\_global_pointer$`,
+in this example assumed to be in the `s0` register:
+
+```assembly
+	lui	a0, %gprel_hi(msg + 1)
+	add	a0, s0, a0, %gprel_add(msg + 1)
+	addi	a0, a0, %gprel_lo(msg + 1)
+```
+
+Which generates the following assembler output and relocations,
+as seen by `objdump`:
+
+
+```assembly
+0000000000000000 <.text>:
+   0:	00000537          	lui	a0,0x0
+			0: R_RISCV_GPREL_HI20	msg+0x1
+   4:	00350533          	add	a0,s0,a0
+			4: R_RISCV_GPREL_ADD	msg+0x1
+   8:	00150513          	addi	a0,a0,1 # 0x1
+			8: R_RISCV_GPREL_LO12_I	msg+0x1
+```
+
+
 GOT-indirect addressing
 ------------------------
 
@@ -295,8 +326,32 @@ as seen by `objdump`:
 0000000000000000 <.text>:
    0:	00000517          	auipc	a0,0x0
 			0: R_RISCV_GOT_HI20	msg+0x1
-   4:	00050513          	mv	a0,a0
+   4:	00050513          	addi	a0,a0,0
 			4: R_RISCV_PCREL_LO12_I	.L1
+```
+
+The following example shows how to load an address from the GOT,
+relative to `\_\_global_pointer$`,
+in this example assumed to be in the `gp` register:
+
+
+```assembly
+	lui	a0, %got_gprel_hi(msg + 1)
+	add	a0, gp, a0, %got_gprel_add(msg + 1)
+	ld	a0, %got_gprel_lo(1)(a0)
+```
+
+Which generates the following assembler output and relocations,
+as seen by `objdump`:
+
+```assembly
+0000000000000000 <.text>:
+   0:	00000537          	lui	a0,0x0
+			0: R_RISCV_GOT_GPREL_HI20	msg+0x1
+   4:	00350533          	add	a0,gp,a0
+			4: R_RISCV_GOT_GPREL_ADD	msg+0x1
+   8:	00150513          	addi	a0,a0,1 # 0x1
+			8: R_RISCV_GOT_GPREL_LO12_I	msg+0x1
 ```
 
 Load Immediate
@@ -353,11 +408,11 @@ for PIC as seen by `objdump`:
 
 When used with the `%gprel` relocation function,
 the `lla` pseudo instruction
-is used to load local symbol addresses relative to the `gp`,
-as in the compact code model:
+is used to load local symbol addresses relative to `\_\_global_pointer$`,
+specified in the last register or defaulting to `gp`:
 
 ```assembly
-	lla a0, %gprel(msg + 1)
+	lla a0, %gprel(msg + 1), s0
 ```
 
 Which generates the following assembler output and relocations
@@ -367,7 +422,7 @@ as seen by `objdump`:
 0000000000000000 <.text>:
    0:	00000537          	lui	a0,0x0
 			0: R_RISCV_GPREL_HI20	msg+0x1
-   4:	00350533          	add	a0,a0,gp
+   4:	00350533          	add	a0,s0,a0
 			4: R_RISCV_GPREL_ADD	msg+0x1
    8:	00150513          	addi	a0,a0,1 # 0x1
 			8: R_RISCV_GPREL_LO12_I	msg+0x1
@@ -375,8 +430,9 @@ as seen by `objdump`:
 
 When used with the `%got_gprel` relocation function,
 the `la` pseudo instruction
-is used to load global symbol addresses in the GOT relative to the `gp`,
-as in the compact code model:
+is used to load global symbol addresses in the GOT entry
+relative to `\_\_global_pointer$`,
+specified in the last register or defaulting to the `gp`:
 
 ```assembly
 	la a0, %got_gprel(msg + 1)
@@ -389,7 +445,7 @@ as seen by `objdump`:
 0000000000000000 <.text>:
    0:	00000537          	lui	a0,0x0
 			0: R_RISCV_GOT_GPREL_HI20	msg+0x1
-   4:	00350533          	add	a0,a0,gp
+   4:	00350533          	add	a0,gp,a0
 			4: R_RISCV_GOT_GPREL_ADD	msg+0x1
    8:	00153503          	ld	a0,1(a0) # 0x1
 			8: R_RISCV_GOT_GPREL_LO12_I	msg+0x1
@@ -443,8 +499,9 @@ as seen by `objdump`:
 
 When used with the `%gprel` relocation function,
 the load and store pseudo instructions
-are used to load symbol addresses relative to the `gp`,
-as in the compact code model:
+are used to load symbol addresses
+relative to `\_\_global_pointer$`,
+assumed to be in the `gp` register:
 
 ```assembly
 	lw	a0, %gprel(var1)
@@ -460,28 +517,75 @@ as seen by `objdump`:
 0000000000000000 <.text>:
    0:	00000537          	lui	a0,0x0
 			0: R_RISCV_GPREL_HI20	var1
-   4:	00350533          	add	a0,a0,gp
+   4:	00350533          	add	a0,gp,a0
 			4: R_RISCV_GPREL_ADD	var1
    8:	00052503          	lw	a0,0(a0)
 			8: R_RISCV_GPREL_LO12_I	var1
    c:	000002b7          	lui	t0,0x0
 			c: R_RISCV_GPREL_HI20	var2
-  10:	003282b3          	add	t0,t0,gp
+  10:	003282b3          	add	t0,gp,t0
 			10: R_RISCV_GPREL_ADD	var2
   14:	0002b507          	fld	fa0,0(t0)
 			14: R_RISCV_GPREL_LO12_I	var2
   18:	000002b7          	lui	t0,0x0
 			18: R_RISCV_GPREL_HI20	var3
-  1c:	003282b3          	add	t0,t0,gp
+  1c:	003282b3          	add	t0,gp,t0
 			1c: R_RISCV_GPREL_ADD	var3
   20:	00a2a023          	sw	a0,0(t0)
 			20: R_RISCV_GPREL_LO12_S	var3
   24:	000002b7          	lui	t0,0x0
 			24: R_RISCV_GPREL_HI20	var4
-  28:	003282b3          	add	t0,t0,gp
+  28:	003282b3          	add	t0,gp,t0
 			28: R_RISCV_GPREL_ADD	var4
   1c:	00a2b027          	fsd	fa0,0(t0)
 			1c: R_RISCV_GPREL_LO12_S	var4
+```
+
+Thread Local Storage
+--------------
+
+The followig pseudo instruction is used for the TLS initial executable,
+relative to `\_\_global_pointer$`,
+assumed to be specified in the last register
+or defaulting to the `gp` register:
+
+```assembly
+	la.tls.ie.gprel	a0, msg + 1
+```
+
+Which generates the following assembler output and relocations,
+as seen by `objdump`:
+
+```assembly
+0000000000000000 <.text>:
+   0:	00000537          	lui	a0,0x0
+			0: R_RISCV_TLS_GOT_GPREL_HI20	msg+0x1
+   4:	00350533          	add	a0,gp,a0
+			4: R_RISCV_TLS_GOT_GPREL_ADD	msg+0x1
+   8:	00150513          	addi	a0,a0,1 # 0x1
+			8: R_RISCV_TLS_GOT_GPREL_LO12	msg+0x1
+```
+
+The followig pseudo instruction is used for the TLS global dynamic,
+relative to `\_\_global_pointer$`,
+assumed to be specified in the last register
+or defaulting to the `gp` register:
+
+```assembly
+	la.tls.gd.gprel	a0, msg + 1, s0
+```
+
+Which generates the following assembler output and relocations,
+as seen by `objdump`:
+
+```assembly
+0000000000000000 <.text>:
+   0:	00000537          	lui	a0,0x0
+			0: R_RISCV_GOT_GD_GPREL_HI20	msg+0x1
+   4:	00350533          	add	a0,s0,a0
+			4: R_RISCV_GOT_GD_GPREL_ADD	msg+0x1
+   8:	00153503          	ld	a0,1(a0) # 0x1
+			8: R_RISCV_GOT_GD_GPREL_LO12_I	msg+0x1
 ```
 
 Constants
