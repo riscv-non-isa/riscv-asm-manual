@@ -24,7 +24,7 @@ types, depending on which extensions are included: The general registers (with
 the program counter), control registers, floating point registers (F extension),
 and vector registers (V extension).
 
-## General registers 
+## General registers
 
 The RV32I base integer ISA includes 32 registers, named `x0` to `x31`. The
 program counter `PC` is separate from these registers, in contrast to other
@@ -43,7 +43,7 @@ will provide them.
 Register  | ABI         | Use by convention                     | Preserved?
 :-------- | :---------- | :---------------                      | ------
 x0        | zero        | hardwired to 0, ignores writes        | _n/a_
-x1        | ra          | return address for jumps              | no  
+x1        | ra          | return address for jumps              | no
 x2        | sp          | stack pointer                         | yes
 x3        | gp          | global pointer                        | _n/a_
 x4        | tp          | thread pointer                        | _n/a_
@@ -83,7 +83,7 @@ As a general rule, the **saved registers** `s0` to `s11` are preserved across
 function calls, while the **argument registers** `a0` to `a7` and the
 **temporary registers** `t0` to `t6` are not.  The use of the various
 specialized registers such as `sp` by convention will be discussed later in more
-detail. 
+detail.
 
 ## Control registers
 
@@ -113,11 +113,8 @@ Latest Specifications draft repository:
 
 ## Instructions
 
-# RISC-V User Level ISA Specification
+# RISC-V ISA Specifications
 https://riscv.org/specifications/
-
-# RISC-V Privileged ISA Specification
-https://riscv.org/specifications/privileged-isa/
 
 ## Instruction Aliases
 
@@ -733,3 +730,83 @@ pass_msg:
 fail_msg:
         .string "FAIL\n"
 ```
+
+## A listing of standard RISC-V pseudoinstructions
+
+Pseudoinstruction            | Base Instruction(s)                                           | Meaning   | Comment
+:----------------------------|:--------------------------------------------------------------|:----------|:--------|
+la rd, symbol                | auipc rd, symbol[31:12]; addi rd, rd, symbol[11:0]            | Load address
+l{b\|h\|w\|d} rd, symbol     | auipc rd, symbol[31:12]; l{b\|h\|w\|d} rd, symbol[11:0]\(rd\) | Load global
+s{b\|h\|w\|d} rd, symbol, rt | auipc rt, symbol[31:12]; s{b\|h\|w\|d} rd, symbol[11:0]\(rt\) | Store global
+fl{w\|d} rd, symbol, rt      | auipc rt, symbol[31:12]; fl{w\|d} rd, symbol[11:0]\(rt\)      | Floating-point load global
+fs{w\|d} rd, symbol, rt      | auipc rt, symbol[31:12]; fs{w\|d} rd, symbol[11:0]\(rt\)      | Floating-point store global
+nop                          | addi x0, x0, 0                                                | No operation
+li rd, immediate             | *Myriad sequences*                                            | Load immediate
+mv rd, rs                    | addi rd, rs, 0                                                | Copy register
+not rd, rs                   | xori rd, rs, -1                                               | One’s complement
+neg rd, rs                   | sub rd, x0, rs                                                | Two’s complement
+negw rd, rs                  | subw rd, x0, rs                                               | Two’s complement word
+sext.b rd, rs                | slli rd, rs, XLEN - 8; srai rd, rd, XLEN - 8                  | Sign extend byte | It will expand to another instruction sequence when B extension is available*[1]
+sext.h rd, rs                | slli rd, rs, XLEN - 16; srai rd, rd, XLEN - 16                | Sign extend half word | It will expand to another instruction sequence when B extension is available*[1]
+sext.w rd, rs                | addiw rd, rs, 0                                               | Sign extend word
+zext.b rd, rs                | andi rd, rs, 255                                              | Zero extend byte
+zext.h rd, rs                | slli rd, rs, XLEN - 16; srli rd, rd, XLEN - 16                | Zero extend half word | It will expand to another instruction sequence when B extension is available*[1]
+zext.w rd, rs                | slli rd, rs, XLEN - 32; srli rd, rd, XLEN - 32                | Zero extend word | It will expand to another instruction sequence when B extension is available*[1]
+seqz rd, rs                  | sltiu rd, rs, 1                                               | Set if = zero
+snez rd, rs                  | sltu rd, x0, rs                                               | Set if != zero
+sltz rd, rs                  | slt rd, rs, x0                                                | Set if < zero
+sgtz rd, rs                  | slt rd, x0, rs                                                | Set if > zero
+fmv.s rd, rs                 | fsgnj.s rd, rs, rs                                            | Copy single-precision register
+fabs.s rd, rs                | fsgnjx.s rd, rs, rs                                           | Single-precision absolute value
+fneg.s rd, rs                | fsgnjn.s rd, rs, rs                                           | Single-precision negate
+fmv.d rd, rs                 | fsgnj.d rd, rs, rs                                            | Copy double-precision register
+fabs.d rd, rs                | fsgnjx.d rd, rs, rs                                           | Double-precision absolute value
+fneg.d rd, rs                | fsgnjn.d rd, rs, rs                                           | Double-precision negate
+beqz rs, offset              | beq rs, x0, offset                                            | Branch if = zero
+bnez rs, offset              | bne rs, x0, offset                                            | Branch if != zero
+blez rs, offset              | bge x0, rs, offset                                            | Branch if ≤ zero
+bgez rs, offset              | bge rs, x0, offset                                            | Branch if ≥ zero
+bltz rs, offset              | blt rs, x0, offset                                            | Branch if < zero
+bgtz rs, offset              | blt x0, rs, offset                                            | Branch if > zero
+bgt rs, rt, offset           | blt rt, rs, offset                                            | Branch if >
+ble rs, rt, offset           | bge rt, rs, offset                                            | Branch if ≤
+bgtu rs, rt, offset          | bltu rt, rs, offset                                           | Branch if >, unsigned
+bleu rs, rt, offset          | bgeu rt, rs, offset                                           | Branch if ≤, unsigned
+j offset                     | jal x0, offset                                                | Jump
+jal offset                   | jal x1, offset                                                | Jump and link
+jr rs                        | jalr x0, rs, 0                                                | Jump register
+jalr rs                      | jalr x1, rs, 0                                                | Jump and link register
+ret                          | jalr x0, x1, 0                                                | Return from subroutine
+call offset                  | auipc x6, offset[31:12]; jalr x1, x6, offset[11:0]            | Call far-away subroutine
+tail offset                  | auipc x6, offset[31:12]; jalr x0, x6, offset[11:0]            | Tail call far-away subroutine
+fence                        | fence iorw, iorw                                              | Fence on all memory and I/O
+
+* [1] We don't specify the code sequence when the B-extension is present, since B-extension still not ratified or frozen. We will specify the expansion sequence once it's frozen.
+
+## Pseudoinstructions for accessing control and status registers
+
+Pseudoinstruction | Base Instruction(s)        | Meaning
+:---------------- |:---------------------------|:-------
+rdinstret[h] rd   | csrrs rd, instret[h], x0   | Read instructions-retired counter
+rdcycle[h] rd     | csrrs rd, cycle[h], x0     | Read cycle counter
+rdtime[h] rd      | csrrs rd, time[h], x0      | Read real-time clock
+csrr rd, csr      | csrrs rd, csr, x0          | Read CSR
+csrw csr, rs      | csrrw x0, csr, rs          | Write CSR
+csrs csr, rs      | csrrs x0, csr, rs          | Set bits in CSR
+csrc csr, rs      | csrrc x0, csr, rs          | Clear bits in CSR
+csrwi csr, imm    | csrrwi x0, csr, imm        | Write CSR, immediate
+csrsi csr, imm    | csrrsi x0, csr, imm        | Set bits in CSR, immediate
+csrci csr, imm    | csrrci x0, csr, imm        | Clear bits in CSR, immediate
+frcsr rd          | csrrs rd, fcsr, x0         | Read FP control/status register
+fscsr rd, rs      | csrrw rd, fcsr, rs         | Swap FP control/status register
+fscsr rs          | csrrw x0, fcsr, rs         | Write FP control/status register
+frrm rd           | csrrs rd, frm, x0          | Read FP rounding mode
+fsrm rd, rs       | csrrw rd, frm, rs          | Swap FP rounding mode
+fsrm rs           | csrrw x0, frm, rs          | Write FP rounding mode
+fsrmi rd, imm     | csrrwi rd, frm, imm        | Swap FP rounding mode, immediate
+fsrmi imm         | csrrwi x0, frm, imm        | Write FP rounding mode, immediate
+frflags rd        | csrrs rd, fflags, x0       | Read FP exception flags
+fsflags rd, rs    | csrrw rd, fflags, rs       | Swap FP exception flags
+fsflags rs        | csrrw x0, fflags, rs       | Write FP exception flags
+fsflagsi rd, imm  | csrrwi rd, fflags, imm     | Swap FP exception flags, immediate
+fsflagsi imm      | csrrwi x0, fflags, imm     | Write FP exception flags, immediate
