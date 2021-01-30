@@ -335,7 +335,7 @@ in this example assumed to be in the `gp` register:
 ```assembly
 	lui	a0, %got_gprel_hi(msg + 1)
 	add	a0, gp, a0, %got_gprel_add(msg + 1)
-	ld	a0, %got_gprel_lo(1)(a0)
+	ld	a0, %got_gprel_lo(msg + 1)(a0)
 ```
 
 Which generates the following assembler output and relocations,
@@ -347,9 +347,28 @@ as seen by `objdump`:
 			0: R_RISCV_GOT_GPREL_HI20	msg+0x1
    4:	00350533          	add	a0,gp,a0
 			4: R_RISCV_GOT_GPREL_ADD	msg+0x1
-   8:	00150513          	addi	a0,a0,1 # 0x1
+   8:	00053503          	ld	a0,0(a0)
 			8: R_RISCV_GOT_GPREL_LO12_I	msg+0x1
 ```
+
+This address may be dereferenced using:
+
+```assembly
+	lw	t0, 0(a0), %got_gprel(msg + 1)
+	sw	t1, 0(a0), %got_gprel(msg + 1)
+```
+
+Which generates the following assembler output and relocations,
+as seen by `objdump`:
+
+```assembly
+0000000000000000 <.text>:
+   0:	00052283          	lw	t0,0(a0)
+			0: R_RISCV_GOT_GPREL_LOAD	msg+0x1
+   4:	00652023          	sw	t1,0(a0)
+			4: R_RISCV_GOT_GPREL_STORE	msg+0x1
+```
+
 
 Load Immediate
 -------------------
