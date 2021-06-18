@@ -306,6 +306,12 @@ Which, for RV32I, generates the following assembler output, as seen by `objdump`
    4:	eef50513          	addi	a0,a0,-273 # deadbeef <CONSTANT+0x0>
 ```
 
+Load Upper Immediate's Immediate
+-----------------------------------
+
+The immediate argument to `lui` is an integer in the interval [0x0, 0xfffff]. 
+Its compressed form, `c.lui`, accepts only those in the subintervals [0x1, 0x1f] and [0xfffe0, 0xfffff]. 
+
 Load Address
 -----------------
 
