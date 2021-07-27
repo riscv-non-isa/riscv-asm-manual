@@ -164,7 +164,7 @@ Directive    | Arguments                      | Description
 .macro       | name arg1 [, argn]             | begin macro definition \argname to substitute
 .endm        |                                | end macro definition
 .type        | symbol, @function              | accepted for source compatibility
-.option      | {rvc,norvc,pic,nopic,relax,norelax,push,pop} | RISC-V options. Refer to [.option](#.option) for a more detailed description.
+.option      | {arch,rvc,norvc,pic,nopic,relax,norelax,push,pop} | RISC-V options. Refer to [.option](#.option) for a more detailed description.
 .byte        | expression [, expression]*     | 8-bit comma separated words
 .2byte       | expression [, expression]*     | 16-bit comma separated words
 .half        | expression [, expression]*     | 16-bit comma separated words
@@ -214,7 +214,154 @@ ATTRIBUTE_VALUE := <string>
 
 #### `rvc`/`norvc`
 
-Enable/disable the C-extension for the following code region.
+This option will be deprecated soon after `.option arch` has been widely
+implemented on main stream open source toolchains.
+
+Enable/disable the C-extension for the following code region. This option is
+equivalent to `.option arch, +c`/`.option arch, -c`, but widely support by
+older toolchain versions.
+
+Alternative style:
+
+```
+.option push
+.option arch, +c   # Alternative of .option rvc
+.option pop
+
+.option push
+.option arch, -c   # Alternative of .option norvc
+.option pop
+```
+
+NOTE: `.option rvc` might set the ELF flag `EF_RISCV_RVC` in some toolchains. That
+might cause the linker to compress instructions in code regions where that was
+not intended.
+
+NOTE: There is a difference between `.option rvc`/`.option norvc` and
+`.option arch, +c`/`.option arch, -c`. The latter won't set EF_RISCV_RVC in the
+ELF flags.
+
+#### `arch`
+
+Enable and/or disable specific ISA extensions for the following code regions, but
+without changing the arch attribute and `EF_RISCV_RVC` in the ELF flags, that
+means it will not raise the minimal execution environment requirement, so the user
+should take care to the execution of the code regions around
+`.option push`/`.option arch`/`.option pop`.
+
+Syntax for `.option arch`:
+```
+.option arch, <EXTENSIONS-OR-FULLARCH>
+
+EXTENSIONS-OR-FULLARCH := <EXTENSIONS>
+                        | <FULLARCHSTR>
+
+EXTENSIONS             := <EXTENSION> ',' <EXTENSIONS>
+                        | <EXTENSION>
+
+FULLARCHSTR            := <full-arch-string>
+
+EXTENSION              := <OP> <EXTENSION-NAME> <VERSION>
+
+OP                     := '+'
+                        | '-'
+
+VERSION                := [0-9]+ 'p' [0-9]+
+                        | [1-9][0-9]*
+                        |
+
+EXTENSION-NAME         := Naming rule is defined in RISC-V ISA manual
+```
+
+- Extension version can be omitted, the assembler will use the built-in default
+  version for that extension.
+- `OP` can be enable (`+`) or disable (`-`).
+- Format of `<full-arch-string>` is the same as `-march` option.
+
+Example:
+
+```assembly
+.attribute arch, rv64imafdc
+# You can only use instructions from the i, m, a, f, d and c extensions.
+memcpy_general:
+    add     a5,a1,a2
+    beq     a1,a5,.L2
+    add     a2,a0,a2
+    mv      a5,a0
+.L3:
+    addi    a1,a1,1
+    addi    a5,a5,1
+    lbu     a4,-1(a1)
+    sb      a4,-1(a5)
+    bne     a5,a2,.L3
+.L2:
+    ret
+
+.option push     # Push current options to the stack.
+.option arch, +v # Enable vector extension, we can use any instruction in imafdcv extension.
+memcpy_vec:
+    mv a3, a0
+.Lloop:
+    vsetvli t0, a2, e8, m8, ta, ma
+    vle8.v v0, (a1)
+    add a1, a1, t0
+    sub a2, a2, t0
+    vse8.v v0, (a3)
+    add a3, a3, t0
+    bnez a2, .Lloop
+    ret
+.option pop   # Pop current option from the stack, restore the enabled ISA extension status to imafdc.
+
+.option push     # Push current option to the stack.
+.option arch, -c # Disable compressed extension, we can't use any instruction in extension.
+memcpy_norvc:
+    add     a5,a1,a2
+    beq     a1,a5,.L2
+    add     a2,a0,a2
+    mv      a5,a0
+.L3:
+    addi    a1,a1,1
+    addi    a5,a5,1
+    lbu     a4,-1(a1)
+    sb      a4,-1(a5)
+    bne     a5,a2,.L3
+.L2:
+    ret
+.option pop   # Pop current option from the stack, restore the enabled ISA extension status to imafdc.
+
+.option push  # Push current option to the stack.
+.option arch, rv64imc # Set arch to rv64imc.
+    nop
+.option pop   # Pop current option from the stack, restore the enabled ISA extension status to imafdc.
+
+```
+
+NOTE: A typical use case is with `ifunc`, e.g. the C library is built with
+`rv64gc`, but a few functions like memcpy provide two versions, one built with
+`rv64gc` and one built with `rv64gcv`, and then select between them by ifunc
+mechanism at run-time.  However, we don't want to change the minimal execution
+environment requirement to `rv64gcv`, since the `rv64gcv` version will be
+invoked only if the execution environment supports the vector extension, so
+the minimal execution environment requirement still is `rv64gc`.
+
+NOTE: `.option arch, +` will also enable all required extensions, for example,
+`rv32i` + `.option arch, +v` will also enable `f`, `d`, `zve32x`, `zve32f`,
+`zve64x`, `zve64f`, `zve64d`, `zvl32b`, `zvl64b` and `zvl128b` extensions.
+
+NOTE: We recommend `.option arch, +` and `.option arch, -` are used with
+`.option push`/`.option pop` instead of a `.option arch, +` / `.option arch, -`
+pair, because `.option arch, +` will enable all required extensions, but
+`.option arch, -` only disables the specific extension, so the result might be
+unexpected, for example: `rv32i` + `.option arch, +v` + `.option arch, -v`
+will result `rv32ifd_zve32x_zve32f_zve64x_zve64f_zve64d_zvl32b_zvl64b_zvl128b`
+not `rv32i`.
+Another example is `.option arch, rv64ifd` + `.option arch, -f` will still got
+same result `rv64ifd`, because `f` will add back during compute implication
+extensions for `rv64id`.
+
+NOTE: `.option arch, +<ext>, -<ext>` is accepted and will result in enabling the
+extensions that depend on `ext`, e.g. `rv32i` + `.option arch, +v, -v` will result
+`rv32ifd_zve32x_zve32f_zve64x_zve64f_zve64d_zvl32b_zvl64b_zvl128b`.
 
 #### `pic`/`nopic`
 
@@ -226,10 +373,10 @@ affect the expansion of the `la` pseudoinstruction, refer to
 
 Enable/disable linker relaxation for the following code region.
 
-NOTE: Code region follows by `.option relax` will emit
-`R_RISCV_RELAX`/`R_RISCV_ALIGN` even linker unsupport relaxation, suggested
-usage is using `.option norelax` with `.option push`/`.option pop` if
-you want to disable linker relaxation on specific code region.
+NOTE: A code region followed by `.option relax` will emit
+`R_RISCV_RELAX`/`R_RISCV_ALIGN` even if the linker does not support relaxation.
+The suggested usage is using `.option norelax` with `.option push`/`.option pop`
+if linker relaxation should be disabled for a code region.
 
 NOTE: Recommended way to disable linker relaxation of specific code region is
 use `.option push`, `.option norelax` and `.option pop`, that prevent enabled
