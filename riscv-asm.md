@@ -325,16 +325,7 @@ assembled as PIC:
 
 For non-PIC this is an alias for the `lla` pseudo instruction documented below.
 
-For PIC this generates the following instructions and relocations as seen by
-`objdump` (for RV64; RV32 will use `lw` instead of `ld`):
-
-```assembly
-0000000000000000 <.text>:
-   0:	00000517          	auipc	a0,0x0
-			0: R_RISCV_GOT_HI20	msg+0x1
-   4:	00053503          	ld	a0,0(a0) # 0 <.text>
-			4: R_RISCV_PCREL_LO12_I	.L0
-```
+For PIC this is an alias for the `lga` pseudo instruction documented below.
 
 The `la` pseudo instruction is the preferred way for getting the address of
 variables in assembly unless explicit control over PC-relative or GOT-indirect
@@ -357,6 +348,27 @@ This generates the following instructions and relocations as seen by `objdump`:
    0:	00000517          	auipc	a0,0x0
 			0: R_RISCV_PCREL_HI20	msg+0x1
    4:	00050513          	mv	a0,a0
+			4: R_RISCV_PCREL_LO12_I	.L0
+```
+
+Load Global Address
+------------------
+
+The following example shows the `lga` pseudo instruction which is used to load
+global symbol addresses:
+
+```assembly
+	lga	a0, msg + 1
+```
+
+This generates the following instructions and relocations as seen by `objdump`
+(for RV64; RV32 will use `lw` instead of `ld`):
+
+```assembly
+0000000000000000 <.text>:
+   0:	00000517          	auipc	a0,0x0
+			0: R_RISCV_GOT_HI20	msg+0x1
+   4:	00053503          	ld	a0,0(a0) # 0 <.text>
 			4: R_RISCV_PCREL_LO12_I	.L0
 ```
 
@@ -559,6 +571,7 @@ Pseudoinstruction            | Base Instruction(s)                              
 la rd, symbol                | auipc rd, symbol[31:12]; addi rd, rd, symbol[11:0]            | Load address | Without -fPIC
 la rd, symbol                | auipc rd, symbol@GOT[31:12]; l{w\|d} rd, symbol@GOT[11:0]\(rd\) | Load address | With -fPIC
 lla rd, symbol               | auipc rd, symbol[31:12]; addi rd, rd, symbol[11:0]            | Load local address
+lga rd, symbol               | auipc rd, symbol@GOT[31:12]; l{w\|d} rd, symbol@GOT[11:0]\(rd\) | Load global address
 l{b\|h\|w\|d} rd, symbol     | auipc rd, symbol[31:12]; l{b\|h\|w\|d} rd, symbol[11:0]\(rd\) | Load global
 s{b\|h\|w\|d} rd, symbol, rt | auipc rt, symbol[31:12]; s{b\|h\|w\|d} rd, symbol[11:0]\(rt\) | Store global
 fl{w\|d} rd, symbol, rt      | auipc rt, symbol[31:12]; fl{w\|d} rd, symbol[11:0]\(rt\)      | Floating-point load global
