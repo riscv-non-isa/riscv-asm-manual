@@ -548,7 +548,7 @@ fs{w\|d} rd, symbol, rt      | auipc rt, symbol[31:12]; fs{w\|d} rd, symbol[11:0
 nop                          | addi x0, x0, 0                                                | No operation
 li rd, immediate             | *Myriad sequences*                                            | Load immediate
 mv rd, rs                    | addi rd, rs, 0                                                | Copy register
-not rd, rs                   | xori rd, rs, -1                                               | One’s complement
+not rd, rs                   | xori rd, rs, -1                                               | Ones’ complement
 neg rd, rs                   | sub rd, x0, rs                                                | Two’s complement
 negw rd, rs                  | subw rd, x0, rs                                               | Two’s complement word
 sext.b rd, rs                | slli rd, rs, XLEN - 8; srai rd, rd, XLEN - 8                  | Sign extend byte | It will expand to another instruction sequence when B extension is available*[1]
