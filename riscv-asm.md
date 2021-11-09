@@ -182,6 +182,7 @@ Directive    | Arguments                      | Description
 .p2align     | p2,[pad_val=0],max             | align to power of 2
 .balign      | b,[pad_val=0]                  | byte align
 .zero        | integer                        | zero bytes
+.variant_cc  | symbol_name                    | annotate the symbol with variant calling convention
 
 ## Assembler Relocation Functions
 
