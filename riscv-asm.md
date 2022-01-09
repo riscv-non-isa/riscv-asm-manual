@@ -196,6 +196,18 @@ More information can refer [attribute section in RISC-V psABI](https://github.co
 name of attribute or the attribute number, the prefix `Tag_RISCV_` can be
 omitted, and second argument can be string or number.
 
+For assembly input and human readable output Tag_RISCV_reserved_registers also
+supports a register list style representation to make it easier to understand.
+
+The register list style argument will encoding as uleb128, each bit
+corresponding to a register. The bit number for a register is the same as DWARF
+register numbers.
+
+For example if x6, x7, x8 and f10 are reserved, then the encoded value of
+Tag_RISCV_reserved_registers would be 0x400000001c1, and it also could be
+represented as `{x6, x7, x8, f10}` or `{x6-x8, f10}` in assembly and tool
+output.
+
 Syntax for `.attribute`:
 
 ```
@@ -206,6 +218,18 @@ NAME_OR_NUMBER := <attribute-name>
 
 ATTRIBUTE_VALUE := <string>
                  | <number>
+                 | REGISTER_LIST
+
+REGISTER_LIST := '{' REG_LIST '}'
+               | '{' '}'
+
+REG_LIST      := REG_RANGE ',' REG_LIST
+               | REG_RANGE
+
+REG_RANGE     := REG '-' REG
+               | REG
+
+REG           := <register-name> | <abi-register-name> # e.g. x10, t3, f10 or fa2
 
 ```
 
@@ -217,6 +241,7 @@ Tag_RISCV_unaligned_access    |      6 | uleb128        | Indicates whether to i
 Tag_RISCV_priv_spec           |      8 | uleb128        | Indicates the major version of the privileged specification.
 Tag_RISCV_priv_spec_minor     |     10 | uleb128        | Indicates the minor version of the privileged specification.
 Tag_RISCV_priv_spec_revision  |     12 | uleb128        | Indicates the revision version of the privileged specification.
+Tag_RISCV_reserved_registers  |     14 | uleb128        | Indicates the extra reserved register information.
 
 ## Assembler Relocation Functions
 
