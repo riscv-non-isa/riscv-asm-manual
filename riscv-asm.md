@@ -6,7 +6,7 @@ The RISC-V Assembly Programmer's Manual is
 
   &copy; 2017 Palmer Dabbelt <palmer@dabbelt.com>\
   &copy; 2017 Michael Clark <michaeljclark@mac.com>\
-  &copy; 2017 Alex Bradbury <asb@lowrisc.org>\
+  &copy; 2017 Alex Bradbury <asb@lowrisc.org>
 
 It is licensed under the Creative Commons Attribution 4.0 International License
 (CC-BY 4.0). The full license text is available at
@@ -38,7 +38,7 @@ registers, in contrast to other processors such as the ARM-32.
 
 The programmer usually doesn't deal with the x-notation, but uses standardized
 names that are defined as part of the RISC-V **application binary interface**
-(ABI). By convention -- supported by the assembler -- certain registers are used
+(ABI). By convention - supported by the assembler - certain registers are used
 for certain tasks and given standardized names. 
 
 This second case gives us the following set of registers: 
@@ -100,8 +100,8 @@ _Registers of the RV32I. Based on RISC-V documentation and Patterson and
 Waterman "The RISC-V Reader" (2017)_
 
 The somewhat strange distribution of the argument, saved, and temporary
-registers allows the RV32E instruction set with its 16 registers -- `x0` to
-`x15` -- instead of 32 to include registers of all types. RV32E is intended for
+registers allows the RV32E instruction set with its 16 registers - `x0` to
+`x15` - instead of 32 to include registers of all types. RV32E is intended for
 smaller microcontrolers. 
 
 The function of the five special registers is derived from the names:
