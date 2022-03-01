@@ -34,7 +34,7 @@ In the first case, the registers are named `x0` to `x31`. All are completely
 equal as general-use registers, except for `x0`, which has a special function:
 Reading it always returns 0 and writes to it are ignored. This allows various
 tricks and simplifications. The program counter `pc` is separate from these
-registers, in contrast to other processors such as the ARM-32. 
+registers. 
 
 The programmer usually doesn't deal with the x-notation, but uses standardized
 names that are defined as part of the RISC-V **application binary interface**
