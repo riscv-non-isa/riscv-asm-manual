@@ -314,17 +314,35 @@ The immediate argument to `lui` is an integer in the interval [0x0, 0xfffff].
 Its compressed form, `c.lui`, accepts only those in the subintervals [0x1, 0x1f] and [0xfffe0, 0xfffff]. 
 
 Load Address
------------------
+------------
 
-The following example shows the `la` pseudo instruction which
-is used to load symbol addresses:
+The following example shows the `la` pseudo instruction which is used to load
+symbol addresses using the correct sequence based on whether the code is being
+assembled as PIC:
 
 ```assembly
 	la	a0, msg + 1
 ```
 
-Which generates the following assembler output and relocations
-for non-PIC as seen by `objdump`:
+For non-PIC this is an alias for the `lla` pseudo instruction documented below.
+
+For PIC this is an alias for the `lga` pseudo instruction documented below.
+
+The `la` pseudo instruction is the preferred way for getting the address of
+variables in assembly unless explicit control over PC-relative or GOT-indirect
+addressing is required.
+
+Load Local Address
+------------------
+
+The following example shows the `lla` pseudo instruction which is used to load
+local symbol addresses:
+
+```assembly
+	lla	a0, msg + 1
+```
+
+This generates the following instructions and relocations as seen by `objdump`:
 
 ```assembly
 0000000000000000 <.text>:
@@ -334,8 +352,18 @@ for non-PIC as seen by `objdump`:
 			4: R_RISCV_PCREL_LO12_I	.L0
 ```
 
-And generates the following assembler output and relocations
-for PIC as seen by `objdump`:
+Load Global Address
+------------------
+
+The following example shows the `lga` pseudo instruction which is used to load
+global symbol addresses:
+
+```assembly
+	lga	a0, msg + 1
+```
+
+This generates the following instructions and relocations as seen by `objdump`
+(for RV64; RV32 will use `lw` instead of `ld`):
 
 ```assembly
 0000000000000000 <.text>:
@@ -541,7 +569,10 @@ fail_msg:
 
 Pseudoinstruction            | Base Instruction(s)                                           | Meaning   | Comment
 :----------------------------|:--------------------------------------------------------------|:----------|:--------|
-la rd, symbol                | auipc rd, symbol[31:12]; addi rd, rd, symbol[11:0]            | Load address
+la rd, symbol                | auipc rd, symbol[31:12]; addi rd, rd, symbol[11:0]            | Load address | Without -fPIC
+la rd, symbol                | auipc rd, symbol@GOT[31:12]; l{w\|d} rd, symbol@GOT[11:0]\(rd\) | Load address | With -fPIC
+lla rd, symbol               | auipc rd, symbol[31:12]; addi rd, rd, symbol[11:0]            | Load local address
+lga rd, symbol               | auipc rd, symbol@GOT[31:12]; l{w\|d} rd, symbol@GOT[11:0]\(rd\) | Load global address
 l{b\|h\|w\|d} rd, symbol     | auipc rd, symbol[31:12]; l{b\|h\|w\|d} rd, symbol[11:0]\(rd\) | Load global
 s{b\|h\|w\|d} rd, symbol, rt | auipc rt, symbol[31:12]; s{b\|h\|w\|d} rd, symbol[11:0]\(rt\) | Store global
 fl{w\|d} rd, symbol, rt      | auipc rt, symbol[31:12]; fl{w\|d} rd, symbol[11:0]\(rt\)      | Floating-point load global
