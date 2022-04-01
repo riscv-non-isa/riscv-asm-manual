@@ -187,15 +187,15 @@ Directive    | Arguments                      | Description
 
 ## <a name=.attribute></a> `.attribute`
 
-`.attribute` directive is used for record information about an object
-file/binary that a linker or runtime loader needs to check compatibility.
+The `.attribute` directive is used to record information about an object
+file/binary that a linker or runtime loader needs to check for compatibility.
 
-More information can refer [attribute section in RISC-V psABI](https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-elf.adoc#attributes).
+For more information like attribute name, number, value type and description,
+please refer [attribute section in RISC-V psABI](https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-elf.adoc#attributes).
 
-`.attribute` take two argument, first argument of `.attribute` is the symbolic
-name of attribute or the attribute number, the prefix `Tag_RISCV_` can be
-omitted, and second argument is string if attribute number is odd and an integer
-value if the attribute number is even.
+`.attribute` take two argument. The first argument of `.attribute` is the
+symbolic name of attribute or the attribute number, the prefix `Tag_RISCV_`
+can be omitted, the second argument can be string or number.
 
 Syntax for `.attribute`:
 
@@ -209,15 +209,6 @@ ATTRIBUTE_VALUE := <string>
                  | <number>
 
 ```
-
-Attribute name                | Number | Value type     | Description
-:---------------------------- | :----- | :------------- | :----------
-Tag_RISCV_stack_align         |      4 | uleb128        | Indicates the stack alignment requirement in bytes.
-Tag_RISCV_arch                |      5 | NTBS           | Indicates the target architecture of this object.
-Tag_RISCV_unaligned_access    |      6 | uleb128        | Indicates whether to impose unaligned memory accesses in code generation.
-Tag_RISCV_priv_spec           |      8 | uleb128        | Indicates the major version of the privileged specification.
-Tag_RISCV_priv_spec_minor     |     10 | uleb128        | Indicates the minor version of the privileged specification.
-Tag_RISCV_priv_spec_revision  |     12 | uleb128        | Indicates the revision version of the privileged specification.
 
 ## Assembler Relocation Functions
 
