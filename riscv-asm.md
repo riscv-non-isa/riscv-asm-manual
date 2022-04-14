@@ -205,6 +205,10 @@ NOTE: Code region follows by `.option relax` will emit
 usage is using `.option norelax` with `.option push`/`.option pop` if
 you want to disable linker relaxation on specific code region.
 
+NOTE: Recommended way to disable linker relaxation of specific code region is
+use `.option push`, `.option norelax` and `.option pop`, that prevent enabled
+linker relaxation accidentally if user already disable linker relaxation.
+
 #### `push`/`pop`
 
 Push/pop current options to/from the options stack.
