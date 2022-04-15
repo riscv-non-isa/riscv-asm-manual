@@ -164,7 +164,7 @@ Directive    | Arguments                      | Description
 .macro       | name arg1 [, argn]             | begin macro definition \argname to substitute
 .endm        |                                | end macro definition
 .type        | symbol, @function              | accepted for source compatibility
-.option      | {rvc,norvc,pic,nopic,push,pop} | RISC-V options
+.option      | {rvc,norvc,pic,nopic,relax,norelax,push,pop} | RISC-V options. Refer to [.option](#.option) for a more detailed description.
 .byte        | expression [, expression]*     | 8-bit comma separated words
 .2byte       | expression [, expression]*     | 16-bit comma separated words
 .half        | expression [, expression]*     | 16-bit comma separated words
@@ -183,6 +183,35 @@ Directive    | Arguments                      | Description
 .balign      | b,[pad_val=0]                  | byte align
 .zero        | integer                        | zero bytes
 .variant_cc  | symbol_name                    | annotate the symbol with variant calling convention
+
+### <a name=.option></a> `.option`
+
+#### `rvc`/`norvc`
+
+Enable/disable the C-extension for the following code region.
+
+#### `pic`/`nopic`
+
+Set the code model to PIC (position independent code) or non-PIC. This will
+affect the expansion of the `la` pseudoinstruction, refer to
+[listing of standard RISC-V pseudoinstructions](#pseudoinstructions).
+
+#### `relax`/`norelax`
+
+Enable/disable linker relaxation for the following code region.
+
+NOTE: Code region follows by `.option relax` will emit
+`R_RISCV_RELAX`/`R_RISCV_ALIGN` even linker unsupport relaxation, suggested
+usage is using `.option norelax` with `.option push`/`.option pop` if
+you want to disable linker relaxation on specific code region.
+
+NOTE: Recommended way to disable linker relaxation of specific code region is
+use `.option push`, `.option norelax` and `.option pop`, that prevent enabled
+linker relaxation accidentally if user already disable linker relaxation.
+
+#### `push`/`pop`
+
+Push/pop current options to/from the options stack.
 
 ## Assembler Relocation Functions
 
@@ -565,12 +594,12 @@ fail_msg:
         .string "FAIL\n"
 ```
 
-## A listing of standard RISC-V pseudoinstructions
+## <a name=pseudoinstructions></a> A listing of standard RISC-V pseudoinstructions
 
 Pseudoinstruction            | Base Instruction(s)                                           | Meaning   | Comment
 :----------------------------|:--------------------------------------------------------------|:----------|:--------|
-la rd, symbol                | auipc rd, symbol[31:12]; addi rd, rd, symbol[11:0]            | Load address | Without -fPIC
-la rd, symbol                | auipc rd, symbol@GOT[31:12]; l{w\|d} rd, symbol@GOT[11:0]\(rd\) | Load address | With -fPIC
+la rd, symbol                | auipc rd, symbol[31:12]; addi rd, rd, symbol[11:0]            | Load address | With `.option nopic` (Default)
+la rd, symbol                | auipc rd, symbol@GOT[31:12]; l{w\|d} rd, symbol@GOT[11:0]\(rd\) | Load address | With `.option pic`
 lla rd, symbol               | auipc rd, symbol[31:12]; addi rd, rd, symbol[11:0]            | Load local address
 lga rd, symbol               | auipc rd, symbol@GOT[31:12]; l{w\|d} rd, symbol@GOT[11:0]\(rd\) | Load global address
 l{b\|h\|w\|d} rd, symbol     | auipc rd, symbol[31:12]; l{b\|h\|w\|d} rd, symbol[11:0]\(rd\) | Load global
