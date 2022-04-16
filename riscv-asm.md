@@ -465,10 +465,14 @@ The following example shows loading a constant using the `%hi` and
 `%lo` assembler functions.
 
 ```assembly
-	.equ	UART_BASE, 0x40003080
+	.equ	UART0_BASE, 0x40003080  # positive offset
+	.equ	UART1_BASE, 0x40003880  # negative offset
 
-	lui	a0, %hi(UART_BASE)
-	addi	a0, a0, %lo(UART_BASE)
+	lui	a0, %hi(UART0_BASE)
+	addi	a0, a0, %lo(UART0_BASE)
+
+	lui	a0, %hi(UART1_BASE)
+	addi	a0, a0, %lo(UART1_BASE)
 ```
 
 Which generates the following assembler output
@@ -476,8 +480,10 @@ as seen by `objdump`:
 
 ```assembly
 0000000000000000 <.text>:
-   0:	40003537          	lui	a0,0x40003
-   4:	08050513          	addi	a0,a0,128 # 40003080 <UART_BASE>
+   0:   40003537                lui     a0,0x40003
+   4:   08050513                addi    a0,a0,128 # 40003080 <UART0_BASE>
+   8:   40004537                lui     a0,0x40004
+   c:   88050513                addi    a0,a0,-1920 # 40003880 <UART1_BASE>
 ```
 
 Function Calls
