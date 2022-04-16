@@ -217,20 +217,30 @@ Push/pop current options to/from the options stack.
 
 The following table lists assembler relocation expansions:
 
-Assembler Notation          | Description                    | Instruction / Macro
-:----------------------     | :---------------               | :-------------------
-%hi(symbol)                 | Absolute (HI20)                | lui
-%lo(symbol)                 | Absolute (LO12)                | load, store, add
-%pcrel_hi(symbol)           | PC-relative (HI20)             | auipc
-%pcrel_lo(label)            | PC-relative (LO12)             | load, store, add
-%tprel_hi(symbol)           | TLS LE "Local Exec"            | lui
-%tprel_lo(symbol)           | TLS LE "Local Exec"            | load, store, add
-%tprel_add(symbol)          | TLS LE "Local Exec"            | add
-%tls_ie_pcrel_hi(symbol) \* | TLS IE "Initial Exec" (HI20)   | auipc
-%tls_gd_pcrel_hi(symbol) \* | TLS GD "Global Dynamic" (HI20) | auipc
-%got_pcrel_hi(symbol) \*    | GOT PC-relative (HI20)         | auipc
+Assembler Notation          | Description                    | Instruction / Macro  | delta
+:----------------------     | :---------------               | :------------------- | :--------------
+%hi(symbol)                 | Absolute (HI20)                | lui                  | symbol
+%lo(symbol)                 | Absolute (LO12)                | load, store, add     | symbol
+%pcrel_hi(symbol)           | PC-relative (HI20)             | auipc                | symbol - pc
+%pcrel_lo(label)            | PC-relative (LO12)             | load, store, add     | N/A
+%tprel_hi(symbol)           | TLS LE "Local Exec"            | lui                  | symbol - tp
+%tprel_lo(symbol)           | TLS LE "Local Exec"            | load, store, add     | symbol - tp
+%tprel_add(symbol)          | TLS LE "Local Exec"            | add                  | N/A
+%tls_ie_pcrel_hi(symbol) \* | TLS IE "Initial Exec" (HI20)   | auipc                | GOT[symbol] - pc
+%tls_gd_pcrel_hi(symbol) \* | TLS GD "Global Dynamic" (HI20) | auipc                | GOT[symbol] - pc
+%got_pcrel_hi(symbol) \*    | GOT PC-relative (HI20)         | auipc                | GOT[symbol] - pc
 
 \* These reuse %pcrel_lo(label) for their lower half
+
+- %*hi(symbol) : (delta + 0x800) >> 12
+- %*lo(symbol) : delta & 0xfff
+- %pcrel_lo(label) : ((symbol or GOT[symbol] at label) - pc) & 0xfff
+
+0x800 is added to calculate the 20-bit high part, counteracting sign extension
+of the 12-bit low part.
+
+%tprel_add(symbol) is used purely to associate the R_RISCV_TPREL_ADD relocation
+for TLS relaxation.
 
 Labels
 ------------
