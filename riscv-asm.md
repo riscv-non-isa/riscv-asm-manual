@@ -476,15 +476,15 @@ Function Calls
 The following pseudo instructions are available to call subroutines far from
 the current position:
 
-  * `call	<symbol>`: call away subroutine[^1]
-  * `call	<rd>, <symbol>`: call away subroutine[^2]
-  * `tail	<symbol>`: tail call away subroutine[^3]
-  * `jump	<symbol>, <rt>`: jump to away routine[^4]
+  * `call	<symbol>`: call away subroutine[^3]
+  * `call	<rd>, <symbol>`: call away subroutine[^4]
+  * `tail	<symbol>`: tail call away subroutine[^5]
+  * `jump	<symbol>, <rt>`: jump to away routine[^6]
 
-[^1]: `ra` is implicitly used to save the return address.
-[^2]: similar to `call <symbol>`, but `<rd>` is used to save the return address instead.
-[^3]: `t1` is implicitly used as a scratch register.
-[^4]: similar to `tail <symbol>`, but `<rt>` is used as the scratch register instead.
+[^3]: `ra` is implicitly used to save the return address.
+[^4]: similar to `call <symbol>`, but `<rd>` is used to save the return address instead.
+[^5]: `t1` is implicitly used as a scratch register.
+[^6]: similar to `tail <symbol>`, but `<rt>` is used as the scratch register instead.
 
 The following example shows how these pseudo instructions are used:
 
