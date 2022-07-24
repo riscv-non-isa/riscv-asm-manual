@@ -183,6 +183,65 @@ Directive    | Arguments                      | Description
 .balign      | b,[pad_val=0]                  | byte align
 .zero        | integer                        | zero bytes
 .variant_cc  | symbol_name                    | annotate the symbol with variant calling convention
+.attribute   | name, value                    | RISC-V object attributes, more detailed description see [.attribute](#.attribute).
+
+## <a name=.attribute></a> `.attribute`
+
+`.attribute` directive is used for record information about an object
+file/binary that a linker or runtime loader needs to check compatibility.
+
+More information can refer [attribute section in RISC-V psABI](https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-elf.adoc#attributes).
+
+`.attribute` take two argument, first argument of `.attribute` is the symbolic
+name of attribute or the attribute number, the prefix `Tag_RISCV_` can be
+omitted, and second argument can be string or number.
+
+For assembly input and human readable output Tag_RISCV_reserved_registers also
+supports a register list style representation to make it easier to understand.
+
+The register list style argument will encoding as uleb128, each bit
+corresponding to a register. The bit number for a register is the same as DWARF
+register numbers.
+
+For example if x6, x7, x8 and f10 are reserved, then the encoded value of
+Tag_RISCV_reserved_registers would be 0x400000001c1, and it also could be
+represented as `{x6, x7, x8, f10}` or `{x6-x8, f10}` in assembly and tool
+output.
+
+Syntax for `.attribute`:
+
+```
+.attribute <NAME_OR_NUMBER>, <ATTRIBUTE_VALUE>
+
+NAME_OR_NUMBER := <attribute-name>
+                | [1-9][0-9]*
+
+ATTRIBUTE_VALUE := <string>
+                 | <number>
+                 | REGISTER_LIST
+
+REGISTER_LIST := '{' REG_LIST '}'
+               | '{' '}'
+
+REG_LIST      := REG_RANGE ',' REG_LIST
+               | REG_RANGE
+
+REG_RANGE     := REG '-' REG
+               | REG
+
+REG           := <register-name> | <abi-register-name> # e.g. x10, t3, f10 or fa2
+
+```
+
+Attribute name                | Number | Value type     | Description
+:---------------------------- | :----- | :------------- | :----------
+Tag_RISCV_stack_align         |      4 | uleb128        | Indicates the stack alignment requirement in bytes.
+Tag_RISCV_arch                |      5 | NTBS           | Indicates the target architecture of this object.
+Tag_RISCV_unaligned_access    |      6 | uleb128        | Indicates whether to impose unaligned memory accesses in code generation.
+Tag_RISCV_priv_spec           |      8 | uleb128        | Indicates the major version of the privileged specification.
+Tag_RISCV_priv_spec_minor     |     10 | uleb128        | Indicates the minor version of the privileged specification.
+Tag_RISCV_priv_spec_revision  |     12 | uleb128        | Indicates the revision version of the privileged specification.
+Tag_RISCV_reserved_registers  |     14 | uleb128        | Indicates the extra reserved register information.
 
 ### <a name=.option></a> `.option`
 
