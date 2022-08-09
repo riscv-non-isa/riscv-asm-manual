@@ -243,20 +243,30 @@ Push/pop current options to/from the options stack.
 
 The following table lists assembler relocation expansions:
 
-Assembler Notation          | Description                    | Instruction / Macro
-:----------------------     | :---------------               | :-------------------
-%hi(symbol)                 | Absolute (HI20)                | lui
-%lo(symbol)                 | Absolute (LO12)                | load, store, add
-%pcrel_hi(symbol)           | PC-relative (HI20)             | auipc
-%pcrel_lo(label)            | PC-relative (LO12)             | load, store, add
-%tprel_hi(symbol)           | TLS LE "Local Exec"            | lui
-%tprel_lo(symbol)           | TLS LE "Local Exec"            | load, store, add
-%tprel_add(symbol)          | TLS LE "Local Exec"            | add
-%tls_ie_pcrel_hi(symbol) \* | TLS IE "Initial Exec" (HI20)   | auipc
-%tls_gd_pcrel_hi(symbol) \* | TLS GD "Global Dynamic" (HI20) | auipc
-%got_pcrel_hi(symbol) \*    | GOT PC-relative (HI20)         | auipc
+Assembler Notation          | Description                    | Instruction / Macro  | delta
+:----------------------     | :---------------               | :------------------- | :--------------
+%hi(symbol)                 | Absolute (HI20)                | lui                  | symbol
+%lo(symbol)                 | Absolute (LO12)                | load, store, add     | symbol
+%pcrel_hi(symbol)           | PC-relative (HI20)             | auipc                | symbol - pc
+%pcrel_lo(label)            | PC-relative (LO12)             | load, store, add     | N/A
+%tprel_hi(symbol)           | TLS LE "Local Exec"            | lui                  | symbol - tp
+%tprel_lo(symbol)           | TLS LE "Local Exec"            | load, store, add     | symbol - tp
+%tprel_add(symbol)          | TLS LE "Local Exec"            | add                  | N/A
+%tls_ie_pcrel_hi(symbol) \* | TLS IE "Initial Exec" (HI20)   | auipc                | GOT[symbol] - pc
+%tls_gd_pcrel_hi(symbol) \* | TLS GD "Global Dynamic" (HI20) | auipc                | GOT[symbol] - pc
+%got_pcrel_hi(symbol) \*    | GOT PC-relative (HI20)         | auipc                | GOT[symbol] - pc
 
 \* These reuse %pcrel_lo(label) for their lower half
+
+- %*hi(symbol) : (delta + 0x800) >> 12
+- %*lo(symbol) : delta & 0xfff
+- %pcrel_lo(label) : ((symbol or GOT[symbol] at label) - pc) & 0xfff
+
+0x800 is added to calculate the 20-bit high part, counteracting sign extension
+of the 12-bit low part.
+
+%tprel_add(symbol) is used purely to associate the R_RISCV_TPREL_ADD relocation
+for TLS relaxation.
 
 Labels
 ------------
@@ -481,10 +491,14 @@ The following example shows loading a constant using the `%hi` and
 `%lo` assembler functions.
 
 ```assembly
-	.equ	UART_BASE, 0x40003080
+	.equ	UART0_BASE, 0x40003080  # positive offset
+	.equ	UART1_BASE, 0x40003880  # negative offset
 
-	lui	a0, %hi(UART_BASE)
-	addi	a0, a0, %lo(UART_BASE)
+	lui	a0, %hi(UART0_BASE)
+	addi	a0, a0, %lo(UART0_BASE)
+
+	lui	a0, %hi(UART1_BASE)
+	addi	a0, a0, %lo(UART1_BASE)
 ```
 
 Which generates the following assembler output
@@ -492,8 +506,10 @@ as seen by `objdump`:
 
 ```assembly
 0000000000000000 <.text>:
-   0:	40003537          	lui	a0,0x40003
-   4:	08050513          	addi	a0,a0,128 # 40003080 <UART_BASE>
+   0:   40003537                lui     a0,0x40003
+   4:   08050513                addi    a0,a0,128 # 40003080 <UART0_BASE>
+   8:   40004537                lui     a0,0x40004
+   c:   88050513                addi    a0,a0,-1920 # 40003880 <UART1_BASE>
 ```
 
 Function Calls
@@ -624,14 +640,14 @@ fail_msg:
 
 Pseudoinstruction            | Base Instruction(s)                                           | Meaning   | Comment
 :----------------------------|:--------------------------------------------------------------|:----------|:--------|
-la rd, symbol                | auipc rd, symbol[31:12]; addi rd, rd, symbol[11:0]            | Load address | With `.option nopic` (Default)
-la rd, symbol                | auipc rd, symbol@GOT[31:12]; l{w\|d} rd, symbol@GOT[11:0]\(rd\) | Load address | With `.option pic`
-lla rd, symbol               | auipc rd, symbol[31:12]; addi rd, rd, symbol[11:0]            | Load local address
-lga rd, symbol               | auipc rd, symbol@GOT[31:12]; l{w\|d} rd, symbol@GOT[11:0]\(rd\) | Load global address
-l{b\|h\|w\|d} rd, symbol     | auipc rd, symbol[31:12]; l{b\|h\|w\|d} rd, symbol[11:0]\(rd\) | Load global
-s{b\|h\|w\|d} rd, symbol, rt | auipc rt, symbol[31:12]; s{b\|h\|w\|d} rd, symbol[11:0]\(rt\) | Store global
-fl{w\|d} rd, symbol, rt      | auipc rt, symbol[31:12]; fl{w\|d} rd, symbol[11:0]\(rt\)      | Floating-point load global
-fs{w\|d} rd, symbol, rt      | auipc rt, symbol[31:12]; fs{w\|d} rd, symbol[11:0]\(rt\)      | Floating-point store global
+la rd, symbol                | 1: auipc rd, %pcrel_hi(symbol); addi rd, rd, %pcrel_lo(1b)          | Load address | With `.option nopic` (Default)
+la rd, symbol                | 1: auipc rd, %got_pcrel_hi(symbol); l{w\|d} rd, %pcrel_lo(1b)(rd)   | Load address | With `.option pic`
+lla rd, symbol               | 1: auipc rd, %pcrel_hi(symbol); addi rd, rd, %pcrel_lo(1b)          | Load local address
+lga rd, symbol               | 1: auipc rd, %got_pcrel_hi(symbol); l{w\|d} rd, %pcrel_lo(1b)(rd)   | Load global address
+l{b\|h\|w\|d} rd, symbol     | 1: auipc rd, %pcrel_hi(symbol); l{b\|h\|w\|d} rd, %pcrel_lo(1b)(rd) | Load global
+s{b\|h\|w\|d} rd, symbol, rt | 1: auipc rt, %pcrel_hi(symbol); s{b\|h\|w\|d} rd, %pcrel_lo(1b)(rt) | Store global
+fl{w\|d} rd, symbol, rt      | 1: auipc rt, %pcrel_hi(symbol); fl{w\|d} rd, %pcrel_lo(1b)(rt)      | Floating-point load global
+fs{w\|d} rd, symbol, rt      | 1: auipc rt, %pcrel_hi(symbol); fs{w\|d} rd, %pcrel_lo(1b)(rt)      | Floating-point store global
 nop                          | addi x0, x0, 0                                                | No operation
 li rd, immediate             | *Myriad sequences*                                            | Load immediate
 mv rd, rs                    | addi rd, rs, 0                                                | Copy register
@@ -669,8 +685,8 @@ jal offset                   | jal x1, offset                                   
 jr rs                        | jalr x0, rs, 0                                                | Jump register
 jalr rs                      | jalr x1, rs, 0                                                | Jump and link register
 ret                          | jalr x0, x1, 0                                                | Return from subroutine
-call offset                  | auipc x6, offset[31:12]; jalr x1, x6, offset[11:0]            | Call far-away subroutine
-tail offset                  | auipc x6, offset[31:12]; jalr x0, x6, offset[11:0]            | Tail call far-away subroutine
+call offset                  | 1: auipc x6, %pcrel_hi(offset); jalr x1, x6, %pcrel_lo(1b)    | Call far-away subroutine
+tail offset                  | 1: auipc x6, %pcrel_hi(offset); jalr x0, x6, %pcrel_lo(1b)    | Tail call far-away subroutine
 fence                        | fence iorw, iorw                                              | Fence on all memory and I/O
 
 * [1] We don't specify the code sequence when the B-extension is present, since B-extension still not ratified or frozen. We will specify the expansion sequence once it's frozen.
