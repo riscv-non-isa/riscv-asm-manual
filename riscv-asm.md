@@ -183,6 +183,32 @@ Directive    | Arguments                      | Description
 .balign      | b,[pad_val=0]                  | byte align
 .zero        | integer                        | zero bytes
 .variant_cc  | symbol_name                    | annotate the symbol with variant calling convention
+.attribute   | name, value                    | RISC-V object attributes, more detailed description see [.attribute](#.attribute).
+
+## <a name=.attribute></a> `.attribute`
+
+The `.attribute` directive is used to record information about an object
+file/binary that a linker or runtime loader needs to check for compatibility.
+
+For more information like attribute name, number, value type and description,
+please refer [attribute section in RISC-V psABI](https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-elf.adoc#attributes).
+
+`.attribute` take two argument. The first argument of `.attribute` is the
+symbolic name of attribute or the attribute number, the prefix `Tag_RISCV_`
+can be omitted, the second argument can be string or number.
+
+Syntax for `.attribute`:
+
+```
+.attribute <NAME_OR_NUMBER>, <ATTRIBUTE_VALUE>
+
+NAME_OR_NUMBER := <attribute-name>
+                | [1-9][0-9]*
+
+ATTRIBUTE_VALUE := <string>
+                 | <number>
+
+```
 
 ### <a name=.option></a> `.option`
 
