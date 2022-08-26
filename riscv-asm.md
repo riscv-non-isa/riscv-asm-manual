@@ -669,7 +669,7 @@ jal offset                   | jal x1, offset                                   
 jr rs                        | jalr x0, rs, 0                                                | Jump register
 jalr rs                      | jalr x1, rs, 0                                                | Jump and link register
 ret                          | jalr x0, x1, 0                                                | Return from subroutine
-call offset                  | auipc x6, offset[31:12]; jalr x1, x6, offset[11:0]            | Call far-away subroutine
+call offset                  | auipc x1, offset[31:12]; jalr x1, x1, offset[11:0]            | Call far-away subroutine
 tail offset                  | auipc x6, offset[31:12]; jalr x0, x6, offset[11:0]            | Tail call far-away subroutine
 fence                        | fence iorw, iorw                                              | Fence on all memory and I/O
 
