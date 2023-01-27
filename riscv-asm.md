@@ -496,6 +496,31 @@ as seen by `objdump`:
    4:	08050513          	addi	a0,a0,128 # 40003080 <UART_BASE>
 ```
 
+Far Branches
+------------
+
+The assembler will convert conditional branches into far branches when
+necessary, via inserting a short branch with inverted conditions past an
+unconditional jump.  For example
+
+```assembly
+target:
+	bne a0, a1, target
+.rep 1024
+	nop
+.endr
+	bne a0, a1, target
+```
+
+ends up as
+
+```
+       0:	00b51063          	bne	a0,a1,0 <target>
+...
+    1004:	00b50463          	beq	a0,a1,100c <target+0x100c>
+    1008:	ff9fe06f          	j	0 <target>
+```
+
 Function Calls
 --------------
 
