@@ -122,7 +122,7 @@ ALIAS line from opcodes/riscv-opc.c
 
 To better diagnose situations where the program flow reaches an unexpected
 location, you might want to emit there an instruction that's known to trap. You
-can use an `UNIMP` pseudo-instruction, which should trap in nearly all systems.
+can use an `UNIMP` pseudoinstruction, which should trap in nearly all systems.
 The *de facto* standard implementation of this instruction is:
 
 - `C.UNIMP`: `0000`. The all-zeroes pattern is not a valid instruction. Any
@@ -345,7 +345,7 @@ as seen by `objdump`:
 Load Immediate
 -------------------
 
-The following example shows the `li` pseudo instruction which
+The following example shows the `li` pseudoinstruction which
 is used to load immediate values:
 
 ```assembly
@@ -371,7 +371,7 @@ Its compressed form, `c.lui`, accepts only those in the subintervals [0x1, 0x1f]
 Load Address
 ------------
 
-The following example shows the `la` pseudo instruction which is used to load
+The following example shows the `la` pseudoinstruction which is used to load
 symbol addresses using the correct sequence based on whether the code is being
 assembled as PIC:
 
@@ -379,18 +379,18 @@ assembled as PIC:
 	la	a0, msg + 1
 ```
 
-For non-PIC this is an alias for the `lla` pseudo instruction documented below.
+For non-PIC this is an alias for the `lla` pseudoinstruction documented below.
 
-For PIC this is an alias for the `lga` pseudo instruction documented below.
+For PIC this is an alias for the `lga` pseudoinstruction documented below.
 
-The `la` pseudo instruction is the preferred way for getting the address of
+The `la` pseudoinstruction is the preferred way for getting the address of
 variables in assembly unless explicit control over PC-relative or GOT-indirect
 addressing is required.
 
 Load Local Address
 ------------------
 
-The following example shows the `lla` pseudo instruction which is used to load
+The following example shows the `lla` pseudoinstruction which is used to load
 local symbol addresses:
 
 ```assembly
@@ -410,7 +410,7 @@ This generates the following instructions and relocations as seen by `objdump`:
 Load Global Address
 ------------------
 
-The following example shows the `lga` pseudo instruction which is used to load
+The following example shows the `lga` pseudoinstruction which is used to load
 global symbol addresses:
 
 ```assembly
@@ -431,7 +431,7 @@ This generates the following instructions and relocations as seen by `objdump`
 Load and Store Global
 ---------------------
 
-The following pseudo instructions are available to load from and store to
+The following pseudoinstructions are available to load from and store to
 global objects:
 
   * `l{b|h|w|d} <rd>, <symbol>`: load byte, half word, word or double word from global[^1]
@@ -442,7 +442,7 @@ global objects:
 [^1]: the first operand is implicitly used as a scratch register.
 [^2]: the last operand specifies the scratch register to be used.
 
-The following example shows how these pseudo instructions are used:
+The following example shows how these pseudoinstructions are used:
 
 ```assembly
 	lw	a0, var1
@@ -499,7 +499,7 @@ as seen by `objdump`:
 Function Calls
 --------------
 
-The following pseudo instructions are available to call subroutines far from
+The following pseudoinstructions are available to call subroutines far from
 the current position:
 
   * `call	<symbol>`: call away subroutine[^3]
@@ -512,7 +512,7 @@ the current position:
 [^5]: `t1` is implicitly used as a scratch register.
 [^6]: similar to `tail <symbol>`, but `<rt>` is used as the scratch register instead.
 
-The following example shows how these pseudo instructions are used:
+The following example shows how these pseudoinstructions are used:
 
 ```assembly
 	call	func1
