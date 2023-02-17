@@ -312,11 +312,13 @@ Load Upper Immediate's Immediate
 The immediate argument to `lui` is an integer in the interval [0x0, 0xfffff]. 
 Its compressed form, `c.lui`, accepts only those in the subintervals [0x1, 0x1f] and [0xfffe0, 0xfffff]. 
 
-Add Immediate's Immediate
+Signed Immediates for I- and S-Type Instructions
 -------------------------
 
-The immediate argument to `addi` is an integer in the interval [-2048, 2047].
-The integers in the subinterval [-2048, -1] can also be passed by their (unsigned) associates
+All I- and S-type instructions with 12-bit signed immediates
+--- e.g., `addi` but not `slli` ---
+accept their immediate argument as an integer in the interval [-2048, 2047].
+Integers in the subinterval [-2048, -1] can also be passed by their (unsigned) associates
 in the interval [0xfffff800, 0xffffffff] on RV32I, and
 in [0xfffffffffffff800, 0xffffffffffffffff] on both RV32I and RV64I.
 
