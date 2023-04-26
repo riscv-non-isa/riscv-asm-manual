@@ -183,6 +183,8 @@ Directive    | Arguments                      | Description
 .8byte       | expression [, expression]*     | 64-bit comma separated words
 .dword       | expression [, expression]*     | 64-bit comma separated words
 .quad        | expression [, expression]*     | 64-bit comma separated words
+.float       | expression [, expression]*     | 32-bit floating point values
+.double      | expression [, expression]*     | 64-bit floating point values
 .dtprelword  | expression [, expression]*     | 32-bit thread local word
 .dtpreldword | expression [, expression]*     | 64-bit thread local word
 .sleb128     | expression                     | signed little endian base 128, DWARF
