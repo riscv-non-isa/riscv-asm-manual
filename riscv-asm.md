@@ -829,6 +829,7 @@ ret                          | jalr x0, x1, 0                                   
 call offset                  | auipc x1, offset[31:12]; jalr x1, x1, offset[11:0]            | Call far-away subroutine
 tail offset                  | auipc x6, offset[31:12]; jalr x0, x6, offset[11:0]            | Tail call far-away subroutine
 fence                        | fence iorw, iorw                                              | Fence on all memory and I/O
+pause                        | fence w, 0                                                    | PAUSE hint
 
 * [1] We don't specify the code sequence when the B-extension is present, since B-extension still not ratified or frozen. We will specify the expansion sequence once it's frozen.
 
