@@ -554,6 +554,23 @@ referenced on [this page](https://en.cppreference.com/w/cpp/language/floating_li
 Load Floating-point Immediate
 -------------------
 
+The `Zfa` extension introduces `fli.{h|s|d|q}` instructions for loading a specific
+set of floating-point immediates, supported values can be found in the
+RISC-V ISA specification but are also listed below.
+
+The `fli` instruction is used to load a floating point immediate into a floating
+register, the accpted immediate is defined in [Floating-point literals](fp-literal),
+and the reference table can be found in [FLI operands reference table](fli-operand-value).
+
+```assembly
+	fli.s	fa0, 0x1p-15
+	fli.s	fa1, 0.00390625
+	fli.s	fa2, 6.25e-02
+```
+
+The tool should reject any value that does not exactly match a floating-point
+immediate operand for the 'fli' instruction.
+
 RISC-V does not offer a generic pseudoinstruction to load an arbitrary floating
 point immediate value. Instead, a programmer can use the `.float`/`.double`
 directive to declare a floating point immediate value in the source code, and
@@ -567,6 +584,48 @@ pseudoinstruction (`fl{h|w|d|q}`).
 	.text
 	flw fa0, .VAL, t0
 ```
+
+
+<a name="fli-operand-value"></a>FLI operands reference table
+
+Value                       | Example legal input values
+:----------------------     | :---------------------
+-1.0                        | -0x1p+0, -1.0, -1.0e+0
+Minimum positive normal     | min
+1.0 x 2 ^ -16               | 0x1p-16, 0.0000152587890625, 1.52587890625e-05
+1.0 x 2 ^ -15               | 0x1p-15, 0.000030517578125, 3.0517578125e-05
+1.0 x 2 ^ -8                | 0x1p-8, 0.00390625, 3.90625e-03
+1.0 x 2 ^ -7                | 0x1p-7, 0.0078125, 7.8125e-03
+0.0625 (2 ^ -4)             | 0x1p-4, 0.0625, 6.25e-02
+0.125 (2 ^ -3)              | 0x1p-3, 0.125, 1.25e-01
+0.25                        | 0x1p-2, 0.25, 2.5e-01
+0.3125                      | 0x1.4p-2, 0.3125, 3.125e-01
+0.375                       | 0x1.8p-2, 0.375, 3.75e-01
+0.4375                      | 0x1.cp-2, 0.4375, 4.375e-01
+0.5                         | 0x1p-1, 0.5, 5.0e-01
+0.625                       | 0x1.4p-1, 0.625, 6.25e-01
+0.75                        | 0x1.8p-1, 0.75, 7.5e-01
+0.875                       | 0x1.cp-1, 0.875, 8.75e-01
+1.0                         | 0x1p+0, 1.0, 1.0e+00
+1.25                        | 0x1.4p+0, 1.25, 1.25e+00
+1.5                         | 0x1.8p+0, 1.5, 1.5e+00
+1.75                        | 0x1.cp+0, 1.75, 1.75e+00
+2.0                         | 0x1p+1, 2.0, 2.0e+00
+2.5                         | 0x1.4p+1, 2.5, 2.5e+00
+3                           | 0x1.8p+1, 3.0, 3.0e+00
+4                           | 0x1p+2, 4.0, 4.0e+00
+8                           | 0x1p+3, 8.0, 8.0e+00
+16                          | 0x1p+4, 16.0, 1.6e+01
+128 (2 ^ 7)                 | 0x1p+7, 128.0, 1.28e+02
+256 (2 ^ 8)                 | 0x1p+8, 256.0, 2.56e+02
+2 ^ 15                      | 0x1p+15, 32768.0, 3.2768e+04
+2 ^ 16                      | 0x1p+16, 65536.0, 6.5536e+04
+Positive infinity           | inf
+Canonical NaN               | nan
+
+A value can be expressed in various forms within the same format. For example,
+6.5536e+04 can be alternatively written as 6553.6e+01 or 65.536e+03. The table
+provides one possible representation, but any equivalent exact value may be used.
 
 Load Address
 ------------
