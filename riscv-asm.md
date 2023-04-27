@@ -593,8 +593,8 @@ global objects:
 
   * `l{b|h|w|d} <rd>, <symbol>`: load byte, half word, word or double word from global[^1]
   * `s{b|h|w|d} <rd>, <symbol>, <rt>`: store byte, half word, word or double word to global[^2]
-  * `fl{h|w|d|q} <rd>, <symbol>, <rt>`: load half, float, double or quad precision from global[^2]
-  * `fs{h|w|d|q} <rd>, <symbol>, <rt>`: store half, float, double or quad precision to global[^2]
+  * `fl{h|s|d|q} <rd>, <symbol>, <rt>`: load half, float, double or quad precision from global[^2]
+  * `fs{h|s|d|q} <rd>, <symbol>, <rt>`: store half, float, double or quad precision to global[^2]
 
 [^1]: the first operand is implicitly used as a scratch register.
 [^2]: the last operand specifies the scratch register to be used.
