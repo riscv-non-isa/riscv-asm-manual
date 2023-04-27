@@ -535,6 +535,23 @@ Integers in the subinterval [-2048, -1] can also be passed by their (unsigned) a
 in the interval [0xfffff800, 0xffffffff] on RV32I, and
 in [0xfffffffffffff800, 0xffffffffffffffff] on both RV32I and RV64I.
 
+Load Floating Point Immediate
+-------------------
+
+RISC-V does not offer a generic pseudoinstruction to load an arbitrary floating
+point immediate value. Instead, a programmer can use the `.float`/`.double`
+directive to declare a floating point immediate value in the source code, and
+then load it into a floating point register using the load global
+pseudoinstruction (`fl{h|w|d|q}`).
+
+```assembly
+	.data
+.VAL:
+	.float .0x1p+17
+	.text
+	flw fa0, .VAL, t0
+```
+
 Load Address
 ------------
 
