@@ -12,6 +12,14 @@ It is licensed under the Creative Commons Attribution 4.0 International License
 (CC-BY 4.0). The full license text is available at
 https://creativecommons.org/licenses/by/4.0/.
 
+# Scope
+
+This document aims to provide guidance to assembly programmers targeting the
+standard RISC-V assembly language, which common open-source assemblers like
+GNU as and LLVM's assembler support. Other assemblers might not support the
+same directives or pseudoinstructions; their dialects are outside the scope
+of this document.
+
 # Command-Line Arguments
 
 I think it's probably better to beef up the binutils documentation rather than
