@@ -185,6 +185,7 @@ Directive    | Arguments                      | Description
 .quad        | expression [, expression]*     | 64-bit comma separated words
 .float       | expression [, expression]*     | 32-bit floating point values, see [Floating-point literals](#fp-literal) for the value format.
 .double      | expression [, expression]*     | 64-bit floating point values, see [Floating-point literals](#fp-literal) for the value format.
+.quad        | expression [, expression]*     | 128-bit floating point values, see [Floating-point literals](#fp-literal) for the value format.
 .dtprelword  | expression [, expression]*     | 32-bit thread local word
 .dtpreldword | expression [, expression]*     | 64-bit thread local word
 .sleb128     | expression                     | signed little endian base 128, DWARF
