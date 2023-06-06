@@ -183,6 +183,9 @@ Directive    | Arguments                      | Description
 .8byte       | expression [, expression]*     | 64-bit comma separated words
 .dword       | expression [, expression]*     | 64-bit comma separated words
 .quad        | expression [, expression]*     | 64-bit comma separated words
+.float       | expression [, expression]*     | 32-bit floating point values, see [Floating-point literals](#fp-literal) for the value format.
+.double      | expression [, expression]*     | 64-bit floating point values, see [Floating-point literals](#fp-literal) for the value format.
+.quad        | expression [, expression]*     | 128-bit floating point values, see [Floating-point literals](#fp-literal) for the value format.
 .dtprelword  | expression [, expression]*     | 32-bit thread local word
 .dtpreldword | expression [, expression]*     | 64-bit thread local word
 .sleb128     | expression                     | signed little endian base 128, DWARF
@@ -532,6 +535,38 @@ accept their immediate argument as an integer in the interval [-2048, 2047].
 Integers in the subinterval [-2048, -1] can also be passed by their (unsigned) associates
 in the interval [0xfffff800, 0xffffffff] on RV32I, and
 in [0xfffffffffffff800, 0xffffffffffffffff] on both RV32I and RV64I.
+
+<a name=fp-literal></a>Floating-point literals
+-------------------
+
+The Assembler supports the same floating-point literal formats as those defined
+in the C and C++ standards (i.e., decimal floating-point literals with decimal
+exponents as well as hexadecimal floating-point literals with binary exponents).
+
+Here are some examples:
+* 3.14159
+* 0.271828e1
+* 0x0.3p-4
+
+NOTE: The detailed format of the floating point immediate value can be
+referenced on [this page](https://en.cppreference.com/w/cpp/language/floating_literal)
+
+Load Floating-point Immediate
+-------------------
+
+RISC-V does not offer a generic pseudoinstruction to load an arbitrary floating
+point immediate value. Instead, a programmer can use the `.float`/`.double`
+directive to declare a floating point immediate value in the source code, and
+then load it into a floating point register using the load global
+pseudoinstruction (`fl{h|w|d|q}`).
+
+```assembly
+	.data
+.VAL:
+	.float .0x1p+17
+	.text
+	flw fa0, .VAL, t0
+```
 
 Load Address
 ------------
