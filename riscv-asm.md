@@ -366,9 +366,9 @@ pair, because `.option arch, +` will enable all required extensions, but
 unexpected, for example: `rv32i` + `.option arch, +v` + `.option arch, -v`
 will result `rv32ifd_zve32x_zve32f_zve64x_zve64f_zve64d_zvl32b_zvl64b_zvl128b`
 not `rv32i`.
-Another example is `.option arch, rv64ifd` + `.option arch, -f` will still got
-same result `rv64ifd`, because `f` will add back during compute implication
-extensions for `rv64id`.
+Another example is `.option arch, rv64ifd` + `.option arch, -f`, which results
+in `rv64ifd`, because `f` will be added back when adding the implied extensions
+of `d`.
 
 NOTE: `.option arch, +<ext>, -<ext>` is accepted and will result in enabling the
 extensions that depend on `ext`, e.g. `rv32i` + `.option arch, +v, -v` will result
