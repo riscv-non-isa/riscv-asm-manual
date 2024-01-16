@@ -793,7 +793,7 @@ the current position:
 
 [^3]: `ra` is implicitly used to save the return address.
 [^4]: similar to `call <symbol>`, but `<rd>` is used to save the return address instead.
-[^5]: `t1` is implicitly used as a scratch register.
+[^5]: `t1` is implicitly used as a scratch register, but if the `Zicfilp` extension is enabled, it will use `t2` instead.
 [^6]: similar to `tail <symbol>`, but `<rt>` is used as the scratch register instead.
 
 The following example shows how these pseudoinstructions are used:
