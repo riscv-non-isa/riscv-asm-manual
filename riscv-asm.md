@@ -694,6 +694,7 @@ The following pseudoinstructions are available to load from and store to
 global objects:
 
   * `l{b|h|w|d} <rd>, <symbol>`: load byte, half word, word or double word from global[^1]
+  * `l{bu|hu|wu} <rd>, <symbol>`: load unsigned byte, half word, or word from global[^1]
   * `s{b|h|w|d} <rd>, <symbol>, <rt>`: store byte, half word, word or double word to global[^2]
   * `fl{h|w|d|q} <rd>, <symbol>, <rt>`: load half, float, double or quad precision from global[^2]
   * `fs{h|w|d|q} <rd>, <symbol>, <rt>`: store half, float, double or quad precision to global[^2]
@@ -913,6 +914,7 @@ la rd, symbol                | auipc rd, symbol@GOT[31:12]; l{w\|d} rd, symbol@G
 lla rd, symbol               | auipc rd, symbol[31:12]; addi rd, rd, symbol[11:0]            | Load local address
 lga rd, symbol               | auipc rd, symbol@GOT[31:12]; l{w\|d} rd, symbol@GOT[11:0]\(rd\) | Load global address
 l{b\|h\|w\|d} rd, symbol     | auipc rd, symbol[31:12]; l{b\|h\|w\|d} rd, symbol[11:0]\(rd\) | Load global
+l{bu\|hu\|wu} rd, symbol     | auipc rd, symbol[31:12]; l{bu\|hu\|wu} rd, symbol[11:0]\(rd\) | Load global, unsigned
 s{b\|h\|w\|d} rd, symbol, rt | auipc rt, symbol[31:12]; s{b\|h\|w\|d} rd, symbol[11:0]\(rt\) | Store global
 fl{w\|d} rd, symbol, rt      | auipc rt, symbol[31:12]; fl{w\|d} rd, symbol[11:0]\(rt\)      | Floating-point load global
 fs{w\|d} rd, symbol, rt      | auipc rt, symbol[31:12]; fs{w\|d} rd, symbol[11:0]\(rt\)      | Floating-point store global
