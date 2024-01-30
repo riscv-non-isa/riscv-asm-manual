@@ -48,6 +48,8 @@ binary interface** (ABI). This is what you will usually see in code listings. If
 you really want to see the numeric register names, the `-M` argument to objdump
 will provide them.
 
+(See [this SO thread](https://stackoverflow.com/questions/9268586/what-are-callee-and-caller-saved-registers) to understand what the 4th column means)
+
 Register  | ABI         | Use by convention                     | Preserved?
 :-------- | :---------- | :---------------                      | ------
 x0        | zero        | hardwired to 0, ignores writes        | _n/a_
