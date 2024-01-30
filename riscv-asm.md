@@ -794,7 +794,7 @@ the current position:
 
 [^3]: `ra` is implicitly used to save the return address.
 [^4]: similar to `call <symbol>`, but `<rd>` is used to save the return address instead.
-[^5]: `t1` is implicitly used as a scratch register.
+[^5]: `t1` is implicitly used as a scratch register, but if the `Zicfilp` extension is enabled, it will use `t2` instead.
 [^6]: similar to `tail <symbol>`, but `<rt>` is used as the scratch register instead.
 
 The following example shows how these pseudoinstructions are used:
@@ -956,7 +956,7 @@ jr rs                        | jalr x0, rs, 0                                   
 jalr rs                      | jalr x1, rs, 0                                                | Jump and link register
 ret                          | jalr x0, x1, 0                                                | Return from subroutine
 call offset                  | auipc x1, offset[31:12]; jalr x1, x1, offset[11:0]            | Call far-away subroutine
-tail offset                  | auipc x6, offset[31:12]; jalr x0, x6, offset[11:0]            | Tail call far-away subroutine
+tail offset                  | auipc x6, offset[31:12]; jalr x0, x6, offset[11:0]            | Tail call far-away subroutine | It will use `x7` as scratch register when `Zicfilp` extension enabled.
 fence                        | fence iorw, iorw                                              | Fence on all memory and I/O
 pause                        | fence w, 0                                                    | PAUSE hint
 
