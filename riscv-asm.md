@@ -4,8 +4,8 @@
 
 The RISC-V Assembly Programmer's Manual is
 
-  &copy; 2017 Palmer Dabbelt <palmer@dabbelt.com>
-  &copy; 2017 Michael Clark <michaeljclark@mac.com>
+  &copy; 2017 Palmer Dabbelt <palmer@dabbelt.com>\
+  &copy; 2017 Michael Clark <michaeljclark@mac.com>\
   &copy; 2017 Alex Bradbury <asb@lowrisc.org>
 
 It is licensed under the Creative Commons Attribution 4.0 International License
@@ -22,8 +22,8 @@ of this document.
 
 # Command-Line Arguments
 
-I think it's probably better to beef up the binutils documentation rather than
-duplicating it here.
+(I think it's probably better to beef up the binutils documentation rather than
+duplicating it here.) 
 
 # Registers
 
@@ -34,19 +34,39 @@ and vector registers (V extension).
 
 ## General registers
 
-The RV32I base integer ISA includes 32 registers, named `x0` to `x31`. The
-program counter `PC` is separate from these registers, in contrast to other
-processors such as the ARM-32. The first register, `x0`, has a special function:
-Reading it always returns 0 and writes to it are ignored. As we will see later,
-this allows various tricks and simplifications.
+The **instruction set architecture** (ISA) of RISC-V contains 32 registers.
+There are two ways of viewing them: A hardware-centered approach and the
+programmer's view. 
 
-In practice, the programmer doesn't use this notation for the registers. Though
-`x1` to `x31` are all equally general-use registers as far as the processor is
-concerned, by convention certain registers are used for special tasks. In
-assembler, they are given standardized names as part of the RISC-V **application
-binary interface** (ABI). This is what you will usually see in code listings. If
-you really want to see the numeric register names, the `-M` argument to objdump
-will provide them.
+In the first case, the registers are named `x0` to `x31`. All are completely
+equal as general-use registers, except for `x0`, which has a special function:
+Reading it always returns 0 and writes to it are ignored. This allows various
+tricks and simplifications. The program counter `pc` is separate from these
+registers. 
+
+The programmer usually doesn't deal with the x-notation, but uses standardized
+names that are defined as part of the RISC-V **application binary interface**
+(ABI). By convention - supported by the assembler - certain registers are used
+for certain tasks and given standardized names. 
+
+This second case gives us the following set of registers: 
+
+* Five special registers `zero, ra, sp, gp`, and `tp`
+* Eight **argument registers** `a0` to `a7`
+* Twelve **saved registers** `s0` to `s11`
+* Seven **temporary registers** `t0` to `t6`
+
+One register is assigned double-duty: `x8` is either the first saved register
+`s0` or the _frame pointer_ `fp`. 
+
+The special registers are described in more detail below. The reasoning behind
+the separation into argument, saved, and temporary registers is to create a
+consensus which registers are preserved during system or subroutine calls and
+which ones are free to be used. As a general rule, the saved registers are
+preserved across function calls, while the argument registers and the temporary
+registers are not.  
+
+A combination of both viewpoints results in the following table: 
 
 Register  | ABI         | Use by convention                     | Preserved?
 :-------- | :---------- | :---------------                      | ------
@@ -87,11 +107,24 @@ pc        | _(none)_    | program counter                       | _n/a_
 _Registers of the RV32I. Based on RISC-V documentation and Patterson and
 Waterman "The RISC-V Reader" (2017)_
 
-As a general rule, the **saved registers** `s0` to `s11` are preserved across
-function calls, while the **argument registers** `a0` to `a7` and the
-**temporary registers** `t0` to `t6` are not.  The use of the various
-specialized registers such as `sp` by convention will be discussed later in more
-detail.
+The somewhat strange distribution of the argument, saved, and temporary
+registers allows the RV32E instruction set with its 16 registers - `x0` to
+`x15` - instead of 32 to include registers of all types. RV32E is intended for
+smaller microcontrolers. 
+
+The function of the five special registers is derived from the names:
+
+ABI    | Name            
+:----- | :-------------  
+zero   | zero            
+ra     | return address  
+sp     | stack pointer   
+gp     | global pointer  
+tp     | thread pointer  
+
+Again, execpt for `zero`, there is actually nothing "special" about these
+registers but the convention. 
+
 
 ## Control registers
 
@@ -108,8 +141,8 @@ detail.
 
 # Addressing
 
-Addressing formats like %pcrel_lo().  We can just link to the RISC-V PS ABI
-document to describe what the relocations actually do.
+(Addressing formats like %pcrel_lo().  We can just link to the RISC-V PS ABI
+document to describe what the relocations actually do.) 
 
 # Instruction Set
 
