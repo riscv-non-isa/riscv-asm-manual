@@ -397,9 +397,10 @@ linker relaxation accidentally if user already disable linker relaxation.
 
 Push/pop current options to/from the options stack.
 
-## Assembler Relocation Functions
+## Assembler Modifiers
 
-The following table lists assembler relocation expansions:
+The RISC-V assembler supports the following modifiers for relocatable addresses
+or for computing special values used in RISC-V instruction operands:
 
 Assembler Notation          | Description                    | Instruction / Macro
 :----------------------     | :---------------               | :-------------------
@@ -410,11 +411,15 @@ Assembler Notation          | Description                    | Instruction / Mac
 %tprel_hi(symbol)           | TLS LE "Local Exec"            | lui
 %tprel_lo(symbol)           | TLS LE "Local Exec"            | load, store, add
 %tprel_add(symbol)          | TLS LE "Local Exec"            | add
-%tls_ie_pcrel_hi(symbol) \* | TLS IE "Initial Exec" (HI20)   | auipc
-%tls_gd_pcrel_hi(symbol) \* | TLS GD "Global Dynamic" (HI20) | auipc
-%got_pcrel_hi(symbol) \*    | GOT PC-relative (HI20)         | auipc
+%tls_ie_pcrel_hi(symbol) \*1 | TLS IE "Initial Exec" (HI20)   | auipc
+%tls_gd_pcrel_hi(symbol) \*1 | TLS GD "Global Dynamic" (HI20) | auipc
+%got_pcrel_hi(symbol) \*1    | GOT PC-relative (HI20)         | auipc
+%lpad_hash("func_signature") \*2 | Hash for landing pad labeling | lpad
 
-\* These reuse %pcrel_lo(label) for their lower half
+\*1 These reuse %pcrel_lo(label) for their lower half
+\*2 The format of the function signature string is defined in the RISC-V psABI.
+    The hash result is obtained from the lower 20 bits of the MD5 result of the
+    string.
 
 Labels
 ------------
