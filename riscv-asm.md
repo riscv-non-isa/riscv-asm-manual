@@ -919,17 +919,17 @@ s{b\|h\|w\|d} rd, symbol, rt | auipc rt, symbol[31:12]; s{b\|h\|w\|d} rd, symbol
 fl{w\|d} rd, symbol, rt      | auipc rt, symbol[31:12]; fl{w\|d} rd, symbol[11:0]\(rt\)      | Floating-point load global
 fs{w\|d} rd, symbol, rt      | auipc rt, symbol[31:12]; fs{w\|d} rd, symbol[11:0]\(rt\)      | Floating-point store global
 nop                          | addi x0, x0, 0                                                | No operation
-li rd, immediate             | *Myriad sequences*                                            | Load immediate
+li rd, immediate             | *Myriad sequences*[^1]                                        | Load immediate
 mv rd, rs                    | addi rd, rs, 0                                                | Copy register
 not rd, rs                   | xori rd, rs, -1                                               | Ones’ complement
 neg rd, rs                   | sub rd, x0, rs                                                | Two’s complement
 negw rd, rs                  | subw rd, x0, rs                                               | Two’s complement word
-sext.b rd, rs                | slli rd, rs, XLEN - 8; srai rd, rd, XLEN - 8                  | Sign extend byte | This is a single instruction when `Zbb` extension is available.
-sext.h rd, rs                | slli rd, rs, XLEN - 16; srai rd, rd, XLEN - 16                | Sign extend halfword | This is a single instruction when `Zbb` extension is available.
+sext.b rd, rs                | slli rd, rs, XLEN - 8 <br>srai rd, rd, XLEN - 8               | Sign extend byte | This is a single instruction when `Zbb` extension is available.
+sext.h rd, rs                | slli rd, rs, XLEN - 16 <br>srai rd, rd, XLEN - 16             | Sign extend halfword | This is a single instruction when `Zbb` extension is available.
 sext.w rd, rs                | addiw rd, rs, 0                                               | Sign extend word
 zext.b rd, rs                | andi rd, rs, 255                                              | Zero extend byte
-zext.h rd, rs                | slli rd, rs, XLEN - 16; srli rd, rd, XLEN - 16                | Zero extend halfword | This is a single instruction when `Zbb` extension is available.
-zext.w rd, rs                | slli rd, rs, XLEN - 32; srli rd, rd, XLEN - 32                | Zero extend word | This is a single instruction when `Zba` extension is available.
+zext.h rd, rs                | slli rd, rs, XLEN - 16 <br>srli rd, rd, XLEN - 16             | Zero extend halfword | This is a single instruction when `Zbb` extension is available.
+zext.w rd, rs                | slli rd, rs, XLEN - 32 <br>srli rd, rd, XLEN - 32             | Zero extend word | This is a single instruction when `Zba` extension is available.
 seqz rd, rs                  | sltiu rd, rs, 1                                               | Set if = zero
 snez rd, rs                  | sltu rd, x0, rs                                               | Set if != zero
 sltz rd, rs                  | slt rd, rs, x0                                                | Set if < zero
@@ -955,10 +955,12 @@ jal offset                   | jal x1, offset                                   
 jr rs                        | jalr x0, rs, 0                                                | Jump register
 jalr rs                      | jalr x1, rs, 0                                                | Jump and link register
 ret                          | jalr x0, x1, 0                                                | Return from subroutine
-call offset                  | auipc x1, offset[31:12]; jalr x1, x1, offset[11:0]            | Call far-away subroutine
-tail offset                  | auipc x6, offset[31:12]; jalr x0, x6, offset[11:0]            | Tail call far-away subroutine
+call offset                  | auipc x1, offset[31:12] <br>jalr x1, x1, offset[11:0]         | Call far-away subroutine
+tail offset                  | auipc x6, offset[31:12] <br>jalr x0, x6, offset[11:0]         | Tail call far-away subroutine
 fence                        | fence iorw, iorw                                              | Fence on all memory and I/O
 pause                        | fence w, 0                                                    | PAUSE hint
+
+[^1] The compiler can generate different instruction sequences to load a specific numeric value into a register.
 
 ## Pseudoinstructions for accessing control and status registers
 
