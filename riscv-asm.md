@@ -919,7 +919,7 @@ s{b\|h\|w\|d} rd, symbol, rt | auipc rt, symbol[31:12]; s{b\|h\|w\|d} rd, symbol
 fl{w\|d} rd, symbol, rt      | auipc rt, symbol[31:12]; fl{w\|d} rd, symbol[11:0]\(rt\)      | Floating-point load global
 fs{w\|d} rd, symbol, rt      | auipc rt, symbol[31:12]; fs{w\|d} rd, symbol[11:0]\(rt\)      | Floating-point store global
 nop                          | addi x0, x0, 0                                                | No operation
-li rd, immediate             | *Myriad sequences*[^1]                                        | Load immediate
+li rd, immediate             | *Myriad sequences*[^7]                                        | Load immediate
 mv rd, rs                    | addi rd, rs, 0                                                | Copy register
 not rd, rs                   | xori rd, rs, -1                                               | Ones’ complement
 neg rd, rs                   | sub rd, x0, rs                                                | Two’s complement
@@ -960,7 +960,7 @@ tail offset                  | auipc x6, offset[31:12] <br>jalr x0, x6, offset[1
 fence                        | fence iorw, iorw                                              | Fence on all memory and I/O
 pause                        | fence w, 0                                                    | PAUSE hint
 
-[^1] The compiler can generate different instruction sequences to load a specific numeric value into a register.
+[^7]: The compiler can generate different instruction sequences to load a specific numeric value into a register.
 
 ## Pseudoinstructions for accessing control and status registers
 
