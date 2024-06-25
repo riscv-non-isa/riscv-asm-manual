@@ -559,8 +559,8 @@ set of floating-point immediates, supported values can be found in the
 RISC-V ISA specification but are also listed below.
 
 The `fli` instruction is used to load a floating point immediate into a floating
-register, the accpted immediate is defined in [Floating-point literals](fp-literal),
-and the reference table can be found in [FLI operands reference table](fli-operand-value).
+register, the accpted immediate is defined in [Floating-point literals](#fp-literal),
+and the reference table can be found in [FLI operands reference table](#fli-operand-value).
 
 ```assembly
 	fli.s	fa0, 0x1p-15
