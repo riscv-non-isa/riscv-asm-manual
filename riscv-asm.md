@@ -153,7 +153,9 @@ The following table lists assembler directives:
 
 Directive    | Arguments                      | Description
 :----------- | :-------------                 | :---------------
-.align       | integer                        | align to power of 2 (alias for .p2align)
+.align       | integer                        | align to power of 2 (alias for `.p2align` which is preferred - see [.align](#.align))
+.p2align     | p2,[pad_val=0],max             | align to power of 2
+.balign      | b,[pad_val=0]                  | byte align
 .file        | "filename"                     | emit filename FILE LOCAL symbol table
 .globl       | symbol_name                    | emit symbol_name to symbol table (scope GLOBAL)
 .local       | symbol_name                    | emit symbol_name to symbol table (scope LOCAL)
@@ -190,11 +192,17 @@ Directive    | Arguments                      | Description
 .dtpreldword | expression [, expression]*     | 64-bit thread local word
 .sleb128     | expression                     | signed little endian base 128, DWARF
 .uleb128     | expression                     | unsigned little endian base 128, DWARF
-.p2align     | p2,[pad_val=0],max             | align to power of 2
-.balign      | b,[pad_val=0]                  | byte align
 .zero        | integer                        | zero bytes
 .variant_cc  | symbol_name                    | annotate the symbol with variant calling convention
 .attribute   | name, value                    | RISC-V object attributes, more detailed description see [.attribute](#.attribute).
+
+## <a name=.align></a> `.align`
+
+The `.align` directive for RISC-V is an alias to `.p2align`, which aligns to a
+power of two, so `.align 2` means align to 4 bytes. Because the definition of
+the `.align` directive [varies by architecture](https://sourceware.org/binutils/docs/as/Align.html),
+it is recommended to use the unambiguous `.p2align` or `.balign` directives
+instead.
 
 ## <a name=.attribute></a> `.attribute`
 
@@ -523,8 +531,8 @@ Which, for RV32I, generates the following assembler output, as seen by `objdump`
 Load Upper Immediate's Immediate
 -----------------------------------
 
-The immediate argument to `lui` is an integer in the interval [0x0, 0xfffff]. 
-Its compressed form, `c.lui`, accepts only those in the subintervals [0x1, 0x1f] and [0xfffe0, 0xfffff]. 
+The immediate argument to `lui` is an integer in the interval [0x0, 0xfffff].
+Its compressed form, `c.lui`, accepts only those in the subintervals [0x1, 0x1f] and [0xfffe0, 0xfffff].
 
 Signed Immediates for I- and S-Type Instructions
 -------------------------
