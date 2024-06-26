@@ -195,6 +195,7 @@ Directive    | Arguments                      | Description
 .zero        | integer                        | zero bytes
 .variant_cc  | symbol_name                    | annotate the symbol with variant calling convention
 .attribute   | name, value                    | RISC-V object attributes, more detailed description see [.attribute](#.attribute).
+.insn        | see description                | emit a custom instruction encoding, see [.insn](#.insn)
 
 ## <a name=.attribute></a> `.attribute`
 
@@ -397,6 +398,27 @@ linker relaxation accidentally if user already disable linker relaxation.
 
 Push/pop current options to/from the options stack.
 
+## <a name=.insn></a> `.insn`
+
+Emit an arbitrary instruction. This is useful for custom instructions or for
+very new instructions for which the assembly may not have native support.
+
+There are three overloads:
+
+* `.insn value` - emit a raw instruction with the given value
+* `.insn insn_length, value` - the same, but also verify that the instruction length has the given value in bytes
+* `.insn type, operand [,...,operand_n]` - use one of the [common instruction formats](https://sourceware.org/binutils/docs/as/RISC_002dV_002dFormats.html)
+
+For example `add a0, a1, a2` could also be written as:
+
+* `.insn 0xc58533`
+* `.insn 0x4, 0xc58533`
+* `.insn r 0x33, 0, 0, a0, a1, a2`
+* `.insn r OP, 0, 0, a0, a1, a2`
+
+You can alternatively emit raw instructions using `.word`, however this may
+lead to worse disassembly.
+
 ## Assembler Relocation Functions
 
 The following table lists assembler relocation expansions:
@@ -523,8 +545,8 @@ Which, for RV32I, generates the following assembler output, as seen by `objdump`
 Load Upper Immediate's Immediate
 -----------------------------------
 
-The immediate argument to `lui` is an integer in the interval [0x0, 0xfffff]. 
-Its compressed form, `c.lui`, accepts only those in the subintervals [0x1, 0x1f] and [0xfffe0, 0xfffff]. 
+The immediate argument to `lui` is an integer in the interval [0x0, 0xfffff].
+Its compressed form, `c.lui`, accepts only those in the subintervals [0x1, 0x1f] and [0xfffe0, 0xfffff].
 
 Signed Immediates for I- and S-Type Instructions
 -------------------------
