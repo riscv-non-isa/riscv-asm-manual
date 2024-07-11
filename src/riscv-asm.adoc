@@ -1,0 +1,8 @@
+include::prelude.adoc[]
+
+include::preamble.adoc[]
+
+[preface]
+include::contributors.adoc[]
+
+include::asm-manual.adoc[]

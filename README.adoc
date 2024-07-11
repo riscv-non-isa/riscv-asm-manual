@@ -1,0 +1,107 @@
+= RISC-V Assembly Programmer’s Manual
+
+== License
+
+This work is licensed under a Creative Commons Attribution 4.0 International License (CC-BY-4.0). For details, see the link:LICENSE[LICENSE] file.
+
+== Maintainers
+
+The list of maintainers of this specification is maintained in the link:MAINTAINERS.md[MAINTAINERS] file.
+
+== Contributors
+
+The list of contributors to this specification is maintained in the link:src/contributors.adoc[contributors] file.
+
+For guidelines on how to contribute, refer to the link:CONTRIBUTING.md[CONTRIBUTING] file.
+
+== Governance
+
+The governance for this project is defined in the link:GOVERNANCE.md[GOVERNANCE] file.
+
+Community information, including meeting (if held) and mailing lists are detailed in this file.
+
+== Building the Document
+
+=== Directory Structure
+
+The following directories are used to organize the contents of this repo:
+
+* `dependencies/`: software dependencies needed to build the specification
+* `docs-resources/`: resources for all specifications sourced from link:.gitmodules[git submodule]
+* `src/`: source files for the specification
+* `build/`: default directory where the build artifacts are generated
+
+=== Prerequisites
+
+To build the document, you'll need the following tools installed on your system:
+
+* Make
+* asciiDoctor-pdf
+* Docker
+
+=== Cloning the Repository
+
+```shell
+git clone --recurse-submodules https://github.com/riscv-non-isa/riscv-asm-manual.git
+```
+
+All in one single line:
+
+```shell
+git clone --recurse-submodules https://github.com/riscv-non-isa/riscv-asm-manual.git && cd riscv-asm-manual && git submodule update --init --recursive
+
+```
+
+=== Building the Documentation
+
+To start the build process, run:
+
+```shell
+cd ./riscv-asm-manual && make build
+```
+
+The link:Makefile[] script will check the availability of Docker on your system:
+
+* If Docker is available, the documentation will be built inside a Docker container using the image riscvintl/riscv-docs-base-container-image:latest. This ensures a consistent build environment across different systems.
+* If Docker is not available, the documentation will be built directly on your system using the installed tools.
+
+The documentation is generated from the AsciiDoctor source files in your project. The primary source file is specified by the `HEADER_SOURCE` variable in the Makefile.
+
+The build process utilizes several options, including theming and font settings, and generates a PDF document as output.
+
+=== Cleaning up
+
+To clean up the generated files, run:
+
+```shell
+make clean
+```
+
+== Enabling pre-commit checks locally
+
+The repository has some basic commit checks set up with https://pre-commit.com/[pre-commit] that will be enforced by the GitHub CI.
+To ensure these checks are also run in the local repository while making changes the following can be done:
+
+.Installing pre-commit tool
+[source,shell]
+----
+# Do once on your system
+pip3 install pre-commit
+----
+
+.Installing pre-commit git hook in repo
+[source,shell]
+----
+# Do once in local repo
+pre-commit install
+----
+
+Rather than doing the above `pre-commit install` in every repo that uses it, you can do it https://pre-commit.com/#automatically-enabling-pre-commit-on-repositories[once on your system.]
+
+When enabling additional checks https://pre-commit.com/#plugins[by editing .pre-commit-config.yaml], it is recommended running the newly added check on all files in the repository. This can be done with the following command:
+
+.Running all pre-commit hooks on all files
+[source,shell]
+----
+pre-commit run --all-files
+----
