@@ -210,9 +210,9 @@ The `.attribute` directive is used to record information about an object
 file/binary that a linker or runtime loader needs to check for compatibility.
 
 For more information like attribute name, number, value type and description,
-please refer [attribute section in RISC-V psABI](https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-elf.adoc#attributes).
+please refer to [attribute section in RISC-V psABI](https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-elf.adoc#attributes).
 
-`.attribute` take two argument. The first argument of `.attribute` is the
+`.attribute` take two arguments. The first argument of `.attribute` is the
 symbolic name of attribute or the attribute number, the prefix `Tag_RISCV_`
 can be omitted, the second argument can be string or number.
 
@@ -237,7 +237,7 @@ This option will be deprecated soon after `.option arch` has been widely
 implemented on main stream open source toolchains.
 
 Enable/disable the C-extension for the following code region. This option is
-equivalent to `.option arch, +c`/`.option arch, -c`, but widely support by
+equivalent to `.option arch, +c`/`.option arch, -c`, but widely supported by
 older toolchain versions.
 
 Alternative style:
@@ -547,7 +547,7 @@ in [0xfffffffffffff800, 0xffffffffffffffff] on both RV32I and RV64I.
 <a name=fp-literal></a>Floating-point literals
 -------------------
 
-The Assembler supports the same floating-point literal formats as those defined
+The assembler supports the same floating-point literal formats as those defined
 in the C and C++ standards (i.e., decimal floating-point literals with decimal
 exponents as well as hexadecimal floating-point literals with binary exponents).
 
@@ -567,7 +567,7 @@ set of floating-point immediates, supported values can be found in the
 RISC-V ISA specification but are also listed below.
 
 The `fli` instruction is used to load a floating point immediate into a floating
-register, the accpted immediate is defined in [Floating-point literals](#fp-literal),
+register, the accepted immediate is defined in [Floating-point literals](#fp-literal),
 and the reference table can be found in [FLI operands reference table](#fli-operand-value).
 
 ```assembly
