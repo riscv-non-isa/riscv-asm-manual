@@ -1,0 +1,96 @@
+= RISC-V Assembly Programmer's Manual
+Authors: several contributors
+include::../docs-resources/global-config.adoc[]
+// These variables need customization for the specification version and date
+:docgroup: RISC-V Special Interest Group
+:description: RISC-V Assembly Programmer's Manual
+//Note revdate is populated in Makefile
+:revlifecycle: dev
+:revnumber: v0.0.0
+ifeval::["{revlifecycle}" == "dev"]
+:revremark: This document is in Development state. Change should be expected.
+endif::[]
+ifeval::["{revlifecycle}" == "discussion"]
+:revremark: This document is in Discussion state. Change should be expected.
+endif::[]
+ifeval::["{revlifecycle}" == "stable"]
+:revremark: This document is in Stable state. Assume it may change.
+endif::[]
+ifeval::["{revlifecycle}" == "frozen"]
+:revremark: This document is in Frozen state. Change is extremely unlikely.
+endif::[]
+ifeval::["{revlifecycle}" == "ratified"]
+:revremark: This document is in Ratified state.  No changes are allowed.
+endif::[]
+// These variables should not require customization
+:company: RISC-V
+:url-riscv: http://riscv.org
+:doctype: book
+:preface-title: Preamble
+:colophon:
+:appendix-caption: Appendix
+:imagesdir: ../docs-resources/images
+:title-logo-image: image:risc-v_logo.png["RISC-V International Logo",pdfwidth=3.25in,align=center]
+:experimental:
+:reproducible:
+:icons: font
+:lang: en
+:listing-caption: Listing
+:sectnums:
+:sectnumlevels: 5
+:toclevels: 5
+:toc: left
+:source-highlighter: pygments
+ifdef::backend-pdf[]
+:source-highlighter: coderay
+endif::[]
+:data-uri:
+:hide-uri-scheme:
+:stem: latexmath
+:footnote:
+:xrefstyle: short
+
+ifeval::["{revlifecycle}" == "discussion"]
+[WARNING]
+.This document is in the link:http://riscv.org/spec-state[Discussion state]
+====
+Assume everything can change. This document is not complete yet and was created only
+for the purpose of conversation outside of the document.
+====
+endif::[]
+ifeval::["{revlifecycle}" == "dev"]
+[WARNING]
+.This document is in the link:http://riscv.org/spec-state[Development state]
+====
+Assume everything can change. This draft specification will change before being accepted
+as standard, so implementations made to this draft specification will likely not conform
+to the future standard.
+====
+endif::[]
+ifeval::["{revlifecycle}" == "stable"]
+[WARNING]
+.This document is in the link:http://riscv.org/spec-state[Stable state]
+====
+Assume anything could still change, but limited change should be expected.
+====
+endif::[]
+ifeval::["{revlifecycle}" == "frozen"]
+.This document is in the link:http://riscv.org/spec-state[Frozen state]
+====
+Change is extremely unlikely. A high threshold will be used, and a change
+will only occur because of some truly critical issue being identified during
+the public review cycle. Any other desired or needed changes can be the subject
+of a follow-on new extension.
+====
+endif::[]
+ifeval::["{revlifecycle}" == "ratified"]
+.This document is in the link:http://riscv.org/spec-state[Ratified state]
+====
+No changes are allowed. Any desired or needed changes can be the subject
+of a follow-on new extension. Ratified extensions are never revised.
+====
+endif::[]
+
+[preface]
+== List of tables
+list-of::table[hide_empty_section=true, enhanced_rendering=true]
