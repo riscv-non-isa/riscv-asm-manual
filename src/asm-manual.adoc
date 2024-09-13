@@ -176,6 +176,7 @@ The following table lists assembler directives:
 |.zero        | integer                        | zero bytes
 |.variant_cc  | symbol_name                    | annotate the symbol with variant calling convention
 |.attribute   | name, value                    | RISC-V object attributes, more detailed description see <<.attribute, .attribute>>.
+| .insn        | see description                | emit a custom instruction encoding, see <<.insn, .insn>>
 |===
 
 [id=.align]
@@ -391,6 +392,41 @@ linker relaxation accidentally if user already disable linker relaxation.
 === `push`/`pop`
 
 Push/pop current options to/from the options stack.
+
+[id=.insn]
+== `.insn`
+
+Emit an arbitrary instruction. This is useful for custom instructions or for
+very new instructions which an assembler may not support.
+
+There are three overloads:
+
+* `.insn <value>` - emit a raw instruction with the given value
+* `.insn <insn_length>, <value>` - the same, but also verify that the instruction length has the given value in bytes
+* `.insn <type> <fields>`
+
+<type> is the instruction type (e.g. r, i, s, cj, ...).
+These types are specified in the RISC-V ISA specification.
+
+<fields> is a comma-separated list of the instruction fields.
+The order of the fields is achieved by grouping them and listing
+them from LSB to MSB. The groups are:
+
+* opcode fields
+* function fields
+* register fields
+* immediates and symbols
+
+E.g. an instruction with the fields (sorted from LSB to MSB):
+
+  opcode7, rd, func3, rs1, rs2, func7
+
+Gets listed as follows:
+
+  opcode7, func3, func7, rd, rs1, rs2
+
+For more examples, refer to the
+https://sourceware.org/binutils/docs/as/RISC_002dV_002dFormats.html[Binutils documentation].
 
 == Assembler Relocation Functions
 
