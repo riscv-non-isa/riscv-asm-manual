@@ -1099,8 +1099,13 @@ srli rd, rd, XLEN - 32
 |vmsltu.vi vd, va, i, vm      | vmsleu.vi vd, va, i-1, vm                                     | Vector < immediate, unsigned |
 |vneg.v vd,vs                 | vrsub.vx vd,vs,x0                                             | Vector negate |
 |vnot.v vd,vs,vm              | vxor.vi vd, vs, -1, vm                                        | Vector not |
+|vncvt.x.x.w vd,vs,vm         | vnsrl.wx vd,vs,x0,vm                                          | Vector narrow convert element |
 |vwcvt.x.x.v vd,vs,vm         | vwadd.vx vd,vs,x0,vm                                          | Vector widen convert, integer-integer|
 |vwcvtu.x.x.v vd,vs,vm        | vwaddu.vx vd,vs,x0,vm                                         | Vector widen convert, integer-integer, unsigned|
+|vl1r.v v3, x0                | vl1re8.v v3, x0                                               | Equal to vl1re8.v |
+|vl2r.v v2,x0                 | vl2re8.v v2, x0                                               | Equal to vl2re8.v |
+|vl4r.v v4,x0                 | vl4re8.v v4, x0                                               | Equal to vl4re8.v |
+|vl8r.v v8,x0                 | vl8re8.v v8, x0                                               | Equal to vl8re8.v |
 
 
 
