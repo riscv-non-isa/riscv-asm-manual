@@ -1079,6 +1079,32 @@ srli rd, rd, XLEN - 32
 |jr rs                        | jalr x0, rs, 0                                                | Jump register |
 |jalr rs                      | jalr x1, rs, 0                                                | Jump and link register |
 |ret                          | jalr x0, x1, 0                                                | Return from subroutine |
+|vfneg.v vd, vs               | vfsgnjn.vv vd, vs, vs                                         | Floating-point vector negate |
+|vfabs.v vd, vs               | vfsgnjx.vv vd, vs, vs                                         | Floating-point vector absolute value |
+|vmclr.m vd                   | vmxor.mm vd, vd, vd                                           | Vector clear mask register |
+|vmfge.vv vd, va, vb, vm      | vmfle.vv vd, vb, va, vm                                       | Vector Floating-point >=|
+|vmfgt.vv vd, va, vb, vm      | vmflt.vv vd, vb, va, vm                                       | Vector Floating-point >|
+|vmmv.m vd, vs                | vmand.mm vd, vs, vs                                           | Vector copy mask register |
+|vmnot.m vd, vs               | vmnand.mm vd, vs, vs                                          | Vector invert mask bits|
+|vmset.m vd                   | vmxnor.mm vd, vd, vd                                          | Vector set all mask bits|
+|vmsge.vi vd, va, i, vm       | vmsgt.vi vd, va, i-1, vm                                      | Vector >= Immediate|
+|vmsgeu.vi vd, va, i, vm      | vmsgtu.vi vd, va, i-1, vm                                     | Vector >= Immediate, unsigned|
+|vmsge.vv vd, va, vb, vm      | vmsle.vv vd, vb, va, vm                                       | Vector >= Vector|
+|vmsgeu.vv vd, va, vb, vm     | vmsleu.vv vd, vb, va, vm                                      | Vector >= Vector, unsigned |
+|vmsge.vx vd, va, x, vm       | vmsle.vx vd, x, va, vm                                        | Vector >= scalar|
+|vmsgeu.vx vd, va, x, vm      | vmsleu.vx vd, x, va, vm                                       | Vector >= scalar, unsigned|
+|vmsgt.vv vd, va, vb, vm      | vmslt.vv vd, vb, va, vm                                       | Vector > Vector|
+|vmsgtu.vv vd, va, vb, vm     | vmsltu.vv vd, vb, va, vm                                      | Vector > Vector, unsigned|
+|vmslt.vi vd, va, i, vm       | vmsle.vi vd, va, i-1, vm                                      | Vector < immediate|
+|vmsltu.vi vd, va, i, vm      | vmsleu.vi vd, va, i-1, vm                                     | Vector < immediate, unsigned |
+|vneg.v vd,vs                 | vrsub.vx vd,vs,x0                                             | Vector negate |
+|vnot.v vd,vs,vm              | vxor.vi vd, vs, -1, vm                                        | Vector not |
+|vwcvt.x.x.v vd,vs,vm         | vwadd.vx vd,vs,x0,vm                                          | Vector widen convert, integer-integer|
+|vwcvtu.x.x.v vd,vs,vm        | vwaddu.vx vd,vs,x0,vm                                         | Vector widen convert, integer-integer, unsigned|
+
+
+
+
 
 |call offset
 |auipc x1, offset[31:12] +
