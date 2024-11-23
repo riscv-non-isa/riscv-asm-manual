@@ -1,0 +1,71 @@
+name: Create Document
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  release:
+    types:
+      - created
+
+# Cancel any older workflow runs for PRs that are still in progress, so
+# pushing quickly several times does not create too much load.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.number) || format('run-{0}', github.run_id) }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4.2.2
+      with:
+        submodules: recursive
+    - name: Run build
+      run: make docker-pull-latest build
+      env:
+        VERSION: v${{ github.event.inputs.version }}
+        REVMARK: ${{ github.event.inputs.revision_mark }}
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4.4.3
+      with:
+        name: riscv-asm-manual.zip
+        path: |
+            build/riscv-asm.pdf
+            build/riscv-asm.html
+
+  release-draft:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4.1.8
+      - name: Get timestamp
+        id: date
+        run: echo "RELEASE_DATE=$(date --utc +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
+      - name: Create draft release
+        uses: softprops/action-gh-release@v2.1.0
+        with:
+          draft: true
+          name: Draft release ${{ steps.date.outputs.RELEASE_DATE }}
+          body: Snapshot (${{ github.sha }})
+          files: |
+            riscv-asm-manual.zip/riscv-asm.pdf
+            riscv-asm-manual.zip/riscv-asm.html
+
+  release:
+    if: (github.event_name == 'release' && github.event.action == 'created')
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4.1.8
+      - name: Upload assets
+        uses: softprops/action-gh-release@v2.1.0
+        with:
+          files: |
+            riscv-asm-manual.zip/riscv-asm.pdf
+            riscv-asm-manual.zip/riscv-asm.html
