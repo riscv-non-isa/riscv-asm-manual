@@ -1,10 +1,10 @@
 [preface]
 == Copyright and License Information
 
-The RISC-V Assembly Programmer's Manual is
-(C) 2017 Palmer Dabbelt mailto:palmer@dabbelt.com[palmer@dabbelt.com],
-(C) 2017 Michael Clark mailto:michaeljclark@mac.com[michaeljclark@mac.com] and,
-(C) 2017 Alex Bradbury mailto:asb@lowrisc.org[asb@lowrisc.org].
+The RISC-V Assembly Programmer's Manual is +
+(C) 2017 Palmer Dabbelt mailto:palmer@dabbelt.com[palmer@dabbelt.com], +
+(C) 2017 Michael Clark mailto:michaeljclark@mac.com[michaeljclark@mac.com] and, +
+(C) 2017 Alex Bradbury mailto:asb@lowrisc.org[asb@lowrisc.org]. +
 
 It is licensed under the Creative Commons Attribution 4.0 International License (CC-BY 4.0).
 
