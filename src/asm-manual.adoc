@@ -1105,17 +1105,11 @@ srli rd, rd, XLEN - 32
 |vl4r.v v4,x0                 | vl4re8.v v4, x0                                               | Equal to vl4re8.v |
 |vl8r.v v8,x0                 | vl8re8.v v8, x0                                               | Equal to vl8re8.v |
 
-|vmsge{u}.vx vd, va, x|
- addi t0, x, -1 + 
- vmsgt{u}.vx vd, va, t0, vm  
-| Vector >= scalar
-| When  x > minimum
-
 |vmsge{u}.vx vd, va, x        
 |vmslt{u}.vx vd, va, x +
 vmnand.mm vd, vd, vd
 | Vector >= scalar, unmasked
-| For any x
+| 
 
 | vmsge{u}.vx vd, va, x, v0.t
 | vmslt{u}.vx vd, va, x, v0.t +
