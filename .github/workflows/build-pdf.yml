@@ -1,0 +1,86 @@
+---
+name: Create Specification Document
+
+# The workflow is triggered by pull request, push to main, and manual dispatch.
+on:
+  workflow_dispatch:
+    inputs:
+      revision_mark:
+        description: 'Set revision mark as Draft, Release or Stable:'
+        required: true
+        type: choice
+        options:
+          - Development
+          - Stable
+          - Frozen
+          - Ratified
+        default: Development
+      prerelease:
+        description: Tag as a pre-release?
+        required: false
+        type: boolean
+        default: true
+      draft:
+        description: Create release as a draft?
+        required: false
+        type: boolean
+        default: false
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Get next version
+        uses: reecetech/version-increment@2024.4.4
+        id: version
+        with:
+          scheme: semver
+          increment: patch
+
+      # Pull the latest RISC-V Docs container image
+      - name: Pull Container
+        run: docker pull riscvintl/riscv-docs-base-container-image:latest
+
+      # Override VERSION and REVMARK for manual workflow dispatch
+      - name: Update environment variables
+        run: |
+          echo "VERSION=v${{ steps.version.outputs.version }}" >> "$GITHUB_ENV"
+          echo "REVMARK=${{ github.event.inputs.revision_mark }}" >> "$GITHUB_ENV"
+        if: github.event_name == 'workflow_dispatch'
+
+      # Build Files
+      - name: Build Files
+        run: make
+
+      # Upload the built PDF files as a single artifact
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Build Artifacts
+          path: ${{ github.workspace }}/build/*.pdf
+          retention-days: 30
+
+      # Create Release
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ${{ github.workspace }}/build/*.pdf
+          tag_name: v${{ steps.version.outputs.version }}
+          name: Release ${{ steps.version.outputs.version }}
+          draft: ${{ github.event.inputs.draft }}
+          prerelease: ${{ github.event.inputs.prerelease }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GHTOKEN }}
+        if: github.event_name == 'workflow_dispatch'
+        # This condition ensures this step only runs for workflow_dispatch events.
