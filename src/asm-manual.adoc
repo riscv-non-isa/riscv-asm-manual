@@ -1105,31 +1105,31 @@ srli rd, rd, XLEN - 32
 |vl4r.v v4,x0                 | vl4re8.v v4, x0                                               | Equal to vl4re8.v |
 |vl8r.v v8,x0                 | vl8re8.v v8, x0                                               | Equal to vl8re8.v |
 
-|vmsge{u}.vx vd, va, x        
+|vmsge{u}.vx vd, va, x
 |vmslt{u}.vx vd, va, x +
 vmnand.mm vd, vd, vd
 | Vector >= scalar, unmasked
-| 
+|
 
 | vmsge{u}.vx vd, va, x, v0.t
 | vmslt{u}.vx vd, va, x, v0.t +
  vmxor.mm vd, vd, v0
-| Vector >= scalar, masked  
+| Vector >= scalar, masked
 | When vd≠v0
 
 | vmsge{u}.vx vd, va, x, v0.t, vt
 | vmslt{u}.vx vt, va, x +
- vmandn.mm vd, vd, vt 
+ vmandn.mm vd, vd, vt
 | Vector >= scalar, masked
-| When vd=v0 
+| When vd=v0
 
 |vmsge{u}.vx vd, va, x, v0.t, vt
 |vmslt{u}.vx vt, va, x +
  vmandn.mm vt, v0, vt +
  vmandn.mm vd, vd, v0 +
- vmor.mm vd, vt, vd 
-| Vector >= scalar, masked  
-| For any vd 
+ vmor.mm vd, vt, vd
+| Vector >= scalar, masked
+| For any vd
 
 
 |call offset
