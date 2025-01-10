@@ -370,6 +370,48 @@ NOTE: `.option arch, +<ext>, -<ext>` is accepted and will result in enabling the
 extensions that depend on `ext`, e.g. `rv32i` + `.option arch, +v, -v` will result
 `rv32ifd_zve32x_zve32f_zve64x_zve64f_zve64d_zvl32b_zvl64b_zvl128b`.
 
+=== `autocompress`/`noautocompress`
+
+In RISC-V, it is primarily the assembler's job (not the compiler's), to choose
+the shortest possible version of an instruction. This means the assembler will
+change `lw a0, 16(a1)` into `c.lw a0, 16(a1)`, when either the `C` or `Zca`
+extension is enabled.
+
+While this process does save static code size, there are circumstances where it
+might not be wanted, and instead when assembly writers want exactly the
+instructions they wrote to be assembled.
+
+Previously, this has been achievable with `.option norvc` or `.option arch` (to
+disable the extension the destination is in), but this will become more
+difficult to control as wider instructions are supported by assemblers.
+
+This option does not change the currently enabled extensions, which allows
+instructions of different lengths to still be used without error. For example:
+
+[source,asm]
+----
+  .option arch, +zca
+
+lw a0, 0(a0)   # assembled as 'c.lw a0, 0(a0)' (2 bytes)
+c.lw a0, 0(a0) # not changed
+
+  .option noautocompress
+
+lw a0, 0(a0)   # not changed
+c.lw a0, 0(a0) # not changed, no error
+
+  .option autocompress
+
+lw a0, 0(a0)   # assembled as 'c.lw a0, 0(a0)' (2 bytes)
+c.lw a0, 0(a0) # not changed
+----
+
+The default behaviour is `.option autocompress`.
+
+The default behaviour of some disassemblers is to reverse this process and show
+`lw a0, 0(a0)` when `c.lw a0, 0(a0)` is in the binary. This can be disabled in
+objdump-compatible disassemblers `-M no-aliases`.
+
 === `pic`/`nopic`
 
 Set the code model to PIC (position independent code) or non-PIC. This will
