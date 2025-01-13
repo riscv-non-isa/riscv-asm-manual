@@ -378,8 +378,8 @@ change `lw a0, 16(a1)` into `c.lw a0, 16(a1)`, when either the `C` or `Zca`
 extension is enabled.
 
 While this process does save static code size, there are circumstances where it
-might not be wanted, and instead when assembly writers want exactly the
-instructions they wrote to be assembled.
+might not be wanted, and instead assembly writers want exactly the instructions
+they wrote to be assembled.
 
 Previously, this has been achievable with `.option norvc` or `.option arch` (to
 disable the extension the destination is in), but this will become more
