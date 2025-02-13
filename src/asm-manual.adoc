@@ -809,9 +809,10 @@ as seen by `objdump`:
 
 == Far Branches
 
-The assembler will convert conditional branches into far branches when
-necessary, via inserting a short branch with inverted conditions past an
-unconditional jump.  For example
+When a conditional branch cannot reach a destination, the assembler will replace
+these with far branches which use the longer offset available to unconditional
+jumps to reach the destination. This is done by inserting a short branch with
+inverted conditions past an unconditional jump.  For example:
 
 [source, asm]
 ----
@@ -823,7 +824,12 @@ target:
   bne a0, a1, target
 ----
 
-ends up as
+This example uses a series of `nop`s to separate the final instruction from the
+branch target `target` such that the second `bne` instruction cannot reach it
+with its offset. As such a unconditional branch to the target is added and the
+original instruction replaced with a conditional branch with inverted conditions
+to jump over this new instruction. Consequently, the final assembled binary
+contains the following:
 
 [source, asm]
 ----
