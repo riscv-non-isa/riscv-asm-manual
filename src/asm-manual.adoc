@@ -370,20 +370,43 @@ NOTE: `.option arch, +<ext>, -<ext>` is accepted and will result in enabling the
 extensions that depend on `ext`, e.g. `rv32i` + `.option arch, +v, -v` will result
 `rv32ifd_zve32x_zve32f_zve64x_zve64f_zve64d_zvl32b_zvl64b_zvl128b`.
 
-=== `autocompress`/`noautocompress`
+=== `exact`/`noexact`
 
-In RISC-V, it is primarily the assembler's job (not the compiler's), to choose
-the shortest possible version of an instruction. This means the assembler will
-change `lw a0, 16(a1)` into `c.lw a0, 16(a1)`, when either the `C` or `Zca`
-extension is enabled.
+In RISC-V, the assembler and linker can do several things to change the code
+that a user writes into a different sequence of instructions. There are features
+which help static code size in the final executable:
 
-While this process does save static code size, there are circumstances where it
-might not be wanted, and instead assembly writers want exactly the instructions
-they wrote to be assembled.
+- Compression turns longer instructions into shorter, equivalent instructions.
+  For example the assembler might turn `lw a0, 16(a1)` into `c.lw a0, 16(a1)`
+  when the C or Zca extensions are enabled.
+- Linker Relaxation causes the linker to replace long symbol references with
+  shorter code sequences that can reference the same symbol (documented more
+  fully in the psABI document).
 
-Previously, this has been achievable with `.option norvc` or `.option arch` (to
-disable the extension the destination is in), but this will become more
-difficult to control as wider instructions are supported by assemblers.
+And also features which allow users to write a sequence of code which doesn't
+match what appears in the final executable, but may also avoid assembler errors
+in some cases:
+
+- Branch Relaxation turns short branches of too long or unknown range into code
+  sequences with a longer range. For example `beq a0, a1, sym` will be turned
+  into `bne a0, a1, 4; j sym` because `j` has a longer range than `beq`.
+- The assembler may accept the wrong mnemonic for an instruction because the
+  operands match another, for instance `add a0, a1, 104` is accepted when the
+  correct instruction is `addi a0, a1, 104`.
+
+There are myriad reasons why a programmer may not want the assembly they wrote
+to be modified in any way, but at the moment, they can only control linker
+relaxation with `.option norelax`.
+
+Compression is only controllable by switching off the extension containing the
+smaller instruction, such as with `.option norvc`, which also prevents the user
+directly writing the smaller instructions, and will have further issues with
+larger-than-32-bit instructions that compress to instructions in the base
+architecture.
+
+The aim of `.option exact` is to prevent the assembler or linker from making
+these changes. The option controls both the assembler, and the metadata emitted
+to the linker about whether it is allowed to relax code sequences or not.
 
 This option does not change the currently enabled extensions, which allows
 instructions of different lengths to still be used without error. For example:
@@ -395,22 +418,26 @@ instructions of different lengths to still be used without error. For example:
 lw a0, 0(a0)   # assembled as 'c.lw a0, 0(a0)' (2 bytes)
 c.lw a0, 0(a0) # not changed
 
-  .option noautocompress
+  .option exact
 
 lw a0, 0(a0)   # not changed
 c.lw a0, 0(a0) # not changed, no error
 
-  .option autocompress
+  .option noexact
 
 lw a0, 0(a0)   # assembled as 'c.lw a0, 0(a0)' (2 bytes)
 c.lw a0, 0(a0) # not changed
 ----
 
-The default behaviour is `.option autocompress`.
+The default behaviour is `.option noexact`.
+
+Enabling `.option exact` implies `.option norelax` from that point onwards, so
+this should be used with `.option push; .option exact; ... ; .option pop` to be
+clear about when to re-enable relaxation.
 
 The default behaviour of some disassemblers is to reverse this process and show
 `lw a0, 0(a0)` when `c.lw a0, 0(a0)` is in the binary. This can be disabled in
-objdump-compatible disassemblers `-M no-aliases`.
+objdump-compatible disassemblers using the options `-M no-aliases`.
 
 === `pic`/`nopic`
 
