@@ -1058,12 +1058,12 @@ srli rd, rd, XLEN - 32
 |snez rd, rs                  | sltu rd, x0, rs                                               | Set if != zero |
 |sltz rd, rs                  | slt rd, rs, x0                                                | Set if < zero |
 |sgtz rd, rs                  | slt rd, x0, rs                                                | Set if > zero |
-|fmv.s rd, rs                 | fsgnj.s rd, rs, rs                                            | Copy single-precision register |
-|fabs.s rd, rs                | fsgnjx.s rd, rs, rs                                           | Single-precision absolute value |
-|fneg.s rd, rs                | fsgnjn.s rd, rs, rs                                           | Single-precision negate |
-|fmv.d rd, rs                 | fsgnj.d rd, rs, rs                                            | Copy double-precision register |
-|fabs.d rd, rs                | fsgnjx.d rd, rs, rs                                           | Double-precision absolute value |
-|fneg.d rd, rs                | fsgnjn.d rd, rs, rs                                           | Double-precision negate |
+|fmv.s frd, frs               | fsgnj.s frd, frs, frs                                         | Copy single-precision register |
+|fabs.s frd, frs              | fsgnjx.s frd, frs, frs                                        | Single-precision absolute value |
+|fneg.s frd, frs              | fsgnjn.s frd, frs, frs                                        | Single-precision negate |
+|fmv.d frd, frs               | fsgnj.d frd, frs, frs                                         | Copy double-precision register |
+|fabs.d frd, frs              | fsgnjx.d frd, frs, frs                                        | Double-precision absolute value |
+|fneg.d frd, frs              | fsgnjn.d frd, frs, frs                                        | Double-precision negate |
 |beqz rs, offset              | beq rs, x0, offset                                            | Branch if = zero |
 |bnez rs, offset              | bne rs, x0, offset                                            | Branch if != zero |
 |blez rs, offset              | bge x0, rs, offset                                            | Branch if ≤ zero |
