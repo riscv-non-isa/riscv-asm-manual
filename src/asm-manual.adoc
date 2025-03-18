@@ -383,16 +383,13 @@ which help static code size in the final executable:
   shorter code sequences that can reference the same symbol (documented more
   fully in the psABI document).
 
-And also features which allow users to write a sequence of code which doesn't
-match what appears in the final executable, but may also avoid assembler errors
-in some cases:
+And also a feature which allows users to write a sequence of code which doesn't
+match what appears in the final executable, but avoids assembler errors in some
+cases:
 
 - Branch Relaxation turns short branches of too long or unknown range into code
   sequences with a longer range. For example `beq a0, a1, sym` will be turned
   into `bne a0, a1, 4; j sym` because `j` has a longer range than `beq`.
-- The assembler may accept the wrong mnemonic for an instruction because the
-  operands match another, for instance `add a0, a1, 104` is accepted when the
-  correct instruction is `addi a0, a1, 104`.
 
 There are myriad reasons why a programmer may not want the assembly they wrote
 to be modified in any way, but at the moment, they can only control linker
