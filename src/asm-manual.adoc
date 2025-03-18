@@ -878,9 +878,10 @@ as seen by `objdump`:
 
 == Far Branches
 
-The assembler will convert conditional branches into far branches when
-necessary, via inserting a short branch with inverted conditions past an
-unconditional jump.  For example
+When a conditional branch cannot reach a destination, the assembler will replace
+these with far branches which use the longer offset available to unconditional
+jumps to reach the destination. This is done by inserting a short branch with
+inverted conditions past an unconditional jump.  For example:
 
 [source, asm]
 ----
@@ -892,7 +893,12 @@ target:
   bne a0, a1, target
 ----
 
-ends up as
+This example uses a series of `nop`s to separate the final instruction from the
+branch target `target` such that the second `bne` instruction cannot reach it
+with its offset. As such a unconditional branch to the target is added and the
+original instruction replaced with a conditional branch with inverted conditions
+to jump over this new instruction. Consequently, the final assembled binary
+contains the following:
 
 [source, asm]
 ----
@@ -1127,12 +1133,21 @@ srli rd, rd, XLEN - 32
 |snez rd, rs                  | sltu rd, x0, rs                                               | Set if != zero |
 |sltz rd, rs                  | slt rd, rs, x0                                                | Set if < zero |
 |sgtz rd, rs                  | slt rd, x0, rs                                                | Set if > zero |
-|fmv.s rd, rs                 | fsgnj.s rd, rs, rs                                            | Copy single-precision register |
-|fabs.s rd, rs                | fsgnjx.s rd, rs, rs                                           | Single-precision absolute value |
-|fneg.s rd, rs                | fsgnjn.s rd, rs, rs                                           | Single-precision negate |
-|fmv.d rd, rs                 | fsgnj.d rd, rs, rs                                            | Copy double-precision register |
-|fabs.d rd, rs                | fsgnjx.d rd, rs, rs                                           | Double-precision absolute value |
-|fneg.d rd, rs                | fsgnjn.d rd, rs, rs                                           | Double-precision negate |
+|fmv.h frd, frs               | fsgnj.h frd, frs, frs                                         | Copy half-precision register |
+|fabs.h frd, frs              | fsgnjx.h frd, frs, frs                                        | Half-precision absolute value |
+|fneg.h frd, frs              | fsgnjn.h frd, frs, frs                                        | Half-precision negate |
+|fgt.h rd, frs, frt           | flt.h rd, frt, frs                                            | Half-precision > |
+|fge.h rd, frs, frt           | fle.h rd, frt, frs                                            | Half-precision >= |
+|fmv.s frd, frs               | fsgnj.s frd, frs, frs                                         | Copy single-precision register |
+|fabs.s frd, frs              | fsgnjx.s frd, frs, frs                                        | Single-precision absolute value |
+|fneg.s frd, frs              | fsgnjn.s frd, frs, frs                                        | Single-precision negate |
+|fgt.s rd, frs, frt           | flt.s rd, frt, frs                                            | Single-precision > |
+|fge.s rd, frs, frt           | fle.s rd, frt, frs                                            | Single-precision >= |
+|fmv.d frd, frs               | fsgnj.d frd, frs, frs                                         | Copy double-precision register |
+|fabs.d frd, frs              | fsgnjx.d frd, frs, frs                                        | Double-precision absolute value |
+|fneg.d frd, frs              | fsgnjn.d frd, frs, frs                                        | Double-precision negate |
+|fgt.d rd, frs, frt           | flt.d rd, frt, frs                                            | Double-precision > |
+|fge.d rd, frs, frt           | fle.d rd, frt, frs                                            | Double-precision >= |
 |beqz rs, offset              | beq rs, x0, offset                                            | Branch if = zero |
 |bnez rs, offset              | bne rs, x0, offset                                            | Branch if != zero |
 |blez rs, offset              | bge x0, rs, offset                                            | Branch if ≤ zero |
