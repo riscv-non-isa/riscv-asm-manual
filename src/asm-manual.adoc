@@ -793,6 +793,10 @@ as seen by `objdump`:
       1c: R_RISCV_PCREL_LO12_S  .L0
 ----
 
+On RV32, `ld <rd>, <symbol>` and `sd <rd>, <symbol>, <rt>` can be used to
+generate a sequence including the `ld` and `sd` instructions in Zilsd -- in
+these cases, `<rd>` denotes the even GPR in an even-odd GPR pair.
+
 == Constants
 
 The following example shows loading a constant using the `%hi` and
