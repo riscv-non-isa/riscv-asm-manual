@@ -748,15 +748,15 @@ This generates the following instructions and relocations as seen by `objdump`
 The following pseudoinstructions are available to load from and store to
 global objects:
 
-* `l{b|h|w|d} <rd>, <symbol>`: load byte, half word, word or double word from global{empty}
+* `l{b|h|w|d} <rd>, <symbol expression>`: load byte, half word, word or double word from global{empty}
 footnote:fn-1[the first operand is implicitly used as a scratch register.]
-* `l{bu|hu|wu} <rd>, <symbol>`: load unsigned byte, half word, or word from global{empty}
+* `l{bu|hu|wu} <rd>, <symbol expression>`: load unsigned byte, half word, or word from global{empty}
 footnote:fn-1[]
-* `s{b|h|w|d} <rd>, <symbol>, <rt>`: store byte, half word, word or double word to global{empty}
+* `s{b|h|w|d} <rd>, <symbol expression>, <rt>`: store byte, half word, word or double word to global{empty}
 footnote:fn-2[the last operand specifies the scratch register to be used.]
-* `fl{h|w|d|q} <rd>, <symbol>, <rt>`: load half, float, double or quad precision from global{empty}
+* `fl{h|w|d|q} <rd>, <symbol expression>, <rt>`: load half, float, double or quad precision from global{empty}
 footnote:fn-2[]
-* `fs{h|w|d|q} <rd>, <symbol>, <rt>`: store half, float, double or quad precision to global{empty}
+* `fs{h|w|d|q} <rd>, <symbol expression>, <rt>`: store half, float, double or quad precision to global{empty}
 footnote:fn-2[]
 
 The following example shows how these pseudoinstructions are used:
@@ -793,7 +793,7 @@ as seen by `objdump`:
       1c: R_RISCV_PCREL_LO12_S  .L0
 ----
 
-On RV32, `ld <rd>, <symbol>` and `sd <rd>, <symbol>, <rt>` can be used to
+On RV32, `ld <rd>, <symbol expression>` and `sd <rd>, <symbol expression>, <rt>` can be used to
 generate a sequence including the `ld` and `sd` instructions in Zilsd -- in
 these cases, `<rd>` denotes the even GPR in an even-odd GPR pair.
 
