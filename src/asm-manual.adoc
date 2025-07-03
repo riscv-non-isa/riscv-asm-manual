@@ -397,7 +397,7 @@ primarily affects assembler behaviour, but the assembler also should not emit
 `R_RISCV_RELAX` relocations for affected instructions, which prevents the linker
 relaxing the instruction sequence too.
 
-`.option exact` can be seen as a version of `.option relax` which also affects
+`.option exact` can be seen as a version of `.option norelax` which also affects
 the modifications made by the assembler as well as those made by the linker.
 
 Without this option, compression is only controllable with `.option norvc` --
