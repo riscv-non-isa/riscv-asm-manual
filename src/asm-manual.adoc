@@ -391,22 +391,25 @@ cases:
   sequences with a longer range. For example `beq a0, a1, sym` will be turned
   into `bne a0, a1, 4; j sym` because `j` has a longer range than `beq`.
 
-There are myriad reasons why a programmer may not want the assembly they wrote
-to be modified in any way, but at the moment, they can only control linker
-relaxation with `.option norelax`.
+The aim of `.option exact` is to prevent the assembler and linker from modifying
+the written instruction sequence into a different instruction sequence. This
+primarily affects assembler behaviour, but the assembler also should not emit
+`R_RISCV_RELAX` relocations for affected instructions, which prevents the linker
+relaxing the instruction sequence too.
 
-Compression is only controllable by switching off the extension containing the
-smaller instruction, such as with `.option norvc`, which also prevents the user
-directly writing the smaller instructions, and will have further issues with
-larger-than-32-bit instructions that compress to instructions in the base
-architecture.
+`.option exact` can be seen as a version of `.option relax` which also affects
+the modifications made by the assembler as well as those made by the linker.
 
-The aim of `.option exact` is to prevent the assembler or linker from making
-these changes. The option controls both the assembler, and the metadata emitted
-to the linker about whether it is allowed to relax code sequences or not.
+Without this option, compression is only controllable with `.option norvc` --
+which turns off the C extension, so also prevents users from writing the shorter
+instructions directly. There is no similar mechanism for preventing longer
+instructions being compressed into 32-bit instructions from the base ISA, as the
+base ISA cannot be turned off.
 
 This option does not change the currently enabled extensions, which allows
-instructions of different lengths to still be used without error. For example:
+instructions of different lengths to still be used without error.
+
+For example:
 
 [source,asm]
 ----
