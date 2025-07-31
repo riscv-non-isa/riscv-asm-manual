@@ -862,7 +862,7 @@ footnote:fn-3[`ra` is implicitly used to save the return address.]
 footnote:fn-4[similar to `call <symbol>`, but `<rd>` is used to save the return address instead.]
 * `tail <symbol>`: tail call away subroutine[{empty}
 footnote:fn-5[If the `Zicfilp` extension is available, `t2` is implicitly used as a scratch register. Otherwise,`t1` is implicitly used as a scratch register.]
-* `jump <symbol>, <rt>`: jump to away routine{empty}
+* `jump <symbol>, <rt>`: jump to far-away label{empty}
 footnote:fn-6[similar to `tail <symbol>`, but `<rt>` is used as the scratch register instead.]
 
 The following example shows how these pseudoinstructions are used:
@@ -1103,6 +1103,13 @@ srli rd, rd, XLEN - 32
 |bgtu rs, rt, offset          | bltu rt, rs, offset                                           | Branch if >, unsigned |
 |bleu rs, rt, offset          | bgeu rt, rs, offset                                           | Branch if ≤, unsigned |
 |j offset                     | jal x0, offset                                                | Jump |
+
+|jump offset, rt
+|auipc rt, offset[31:12] +
+jalr x0, rt, offset[11:0]
+|Jump to far-away label
+|
+
 |jal offset                   | jal x1, offset                                                | Jump and link |
 |jr rs                        | jalr x0, rs, 0                                                | Jump register |
 |jalr rs                      | jalr x1, rs, 0                                                | Jump and link register |
@@ -1166,11 +1173,16 @@ jalr x1, x1, offset[11:0]
 |Call far-away subroutine
 |
 
+|call rt, offset
+|auipc rt, offset[31:12] +
+jalr rt, rt, offset[11:0]
+|Call far-away subroutine
+|
+
 |tail offset
 |auipc x6, offset[31:12] +
 jalr x0, x6, offset[11:0]
-|Tail call far-away subroutine
-Tail call far-away subroutine
+| Tail call far-away subroutine
 | It will use `x7` as scratch register when `Zicfilp` extension is available.
 
 |fence                        | fence iorw, iorw                                              | Fence on all memory and I/O |
