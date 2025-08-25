@@ -32,8 +32,8 @@ In practice, the programmer doesn't use this notation for the registers. Though
 concerned, by convention certain registers are used for special tasks. In
 assembler, they are given standardized names as part of the RISC-V *application
 binary interface* (ABI). This is what you will usually see in code listings. If
-you really want to see the numeric register names, the `-M` argument to objdump
-will provide them.
+you really want to see the numeric register names, the `-Mnumeric` argument to
+objdump will provide them.
 
 .Registers of the RV32I. Based on RISC-V documentation and Patterson and Waterman "The RISC-V Reader" (2017)
 [%autowidth]
@@ -83,9 +83,55 @@ detail.
 
 (TBA)
 
-=== Floating Point registers (RV32F)
+=== Floating Point registers (F extension)
 
-(TBA)
+The F extension adds 32 floating point registers, named `f0` to `f31`, each 32
+bits wide. The D extension widens the 32 registers to 64 bits. The Q extension
+widens the 32 registers to 128 bits.
+
+Like the general registers, the floating point registers are given standardized
+names as part of the RISC-V *application binary interface* (ABI).
+
+[%autowidth]
+|===
+|*Register*  | *ABI*       | *Use by convention*                   | *Preserved?*
+|f0          | ft0         | temporary register 0                  | no
+|f1          | ft1         | temporary register 1                  | no
+|f2          | ft2         | temporary register 2                  | no
+|f3          | ft3         | temporary register 3                  | no
+|f4          | ft4         | temporary register 4                  | no
+|f5          | ft5         | temporary register 5                  | no
+|f6          | ft6         | temporary register 6                  | no
+|f7          | ft7         | temporary register 7                  | no
+|f8          | fs0         | saved register 0                      | yes
+|f9          | fs1         | saved register 1                      | yes
+|f10         | fa0         | return value _or_ function argument 0 | no
+|f11         | fa1         | function argument 1                   | no
+|f12         | fa2         | function argument 2                   | no
+|f13         | fa3         | function argument 3                   | no
+|f14         | fa4         | function argument 4                   | no
+|f15         | fa5         | function argument 5                   | no
+|f16         | fa6         | function argument 6                   | no
+|f17         | fa7         | function argument 7                   | no
+|f18         | fs2         | saved register 2                      | yes
+|f19         | fs3         | saved register 3                      | yes
+|f20         | fs4         | saved register 4                      | yes
+|f21         | fs5         | saved register 5                      | yes
+|f22         | fs6         | saved register 6                      | yes
+|f23         | fs7         | saved register 7                      | yes
+|f24         | fs8         | saved register 8                      | yes
+|f25         | fs9         | saved register 9                      | yes
+|f26         | fs10        | saved register 10                     | yes
+|f27         | fs11        | saved register 11                     | yes
+|f28         | ft8         | temporary register 8                  | no
+|f29         | ft9         | temporary register 9                  | no
+|f30         | ft10        | temporary register 10                 | no
+|f31         | ft11        | temporary register 11                 | no
+|===
+Floating-point values in *saved registers* are only preserved across calls if
+they are no larger than the width of a floating-point register in the targeted
+ABI. These registers can be considered temporaries if targeting the base integer
+calling convention.
 
 === Vector registers (RV32V)
 
@@ -1027,15 +1073,15 @@ s{b\|h\|w\|d} rd, symbol[11:0](rt)
 |Store global
 |
 
-|fl{w\|d} rd, symbol, rt
+|fl{h\|w\|d} rd, symbol, rt
 | auipc rt, symbol[31:12] +
-fl{w\|d} rd, symbol[11:0](rt)
+fl{h\|w\|d} rd, symbol[11:0](rt)
 |Floating-point load global
 |
 
-|fs{w\|d} rd, symbol, rt
+|fs{h\|w\|d} rd, symbol, rt
 |auipc rt, symbol[31:12] +
-fs{w\|d} rd, symbol[11:0](rt)
+fs{h\|w\|d} rd, symbol[11:0](rt)
 |Floating-point store global
 |
 
