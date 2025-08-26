@@ -106,7 +106,7 @@ names as part of the RISC-V *application binary interface* (ABI).
 |f8          | fs0         | saved register 0                      | yes
 |f9          | fs1         | saved register 1                      | yes
 |f10         | fa0         | return value _or_ function argument 0 | no
-|f11         | fa1         | function argument 1                   | no
+|f11         | fa1         | return value _or_ function argument 1 | no
 |f12         | fa2         | function argument 2                   | no
 |f13         | fa3         | function argument 3                   | no
 |f14         | fa4         | function argument 4                   | no
