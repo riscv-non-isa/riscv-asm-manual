@@ -1073,15 +1073,15 @@ s{b\|h\|w\|d} rd, symbol[11:0](rt)
 |Store global
 |
 
-|fl{h\|w\|d} rd, symbol, rt
+|fl{h\|w\|d\|q} rd, symbol, rt
 | auipc rt, symbol[31:12] +
-fl{h\|w\|d} rd, symbol[11:0](rt)
+fl{h\|w\|d\|q} rd, symbol[11:0](rt)
 |Floating-point load global
 |
 
-|fs{h\|w\|d} rd, symbol, rt
+|fs{h\|w\|d\|q} rd, symbol, rt
 |auipc rt, symbol[31:12] +
-fs{h\|w\|d} rd, symbol[11:0](rt)
+fs{h\|w\|d\|q} rd, symbol[11:0](rt)
 |Floating-point store global
 |
 
