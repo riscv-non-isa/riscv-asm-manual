@@ -6,7 +6,7 @@ include::../docs-resources/global-config.adoc[]
 :description: RISC-V Assembly Programmer's Manual
 //Note revdate is populated in Makefile
 :revlifecycle: dev
-:revnumber: v0.0.0
+:revnumber: v0.0.1
 ifeval::["{revlifecycle}" == "dev"]
 :revremark: This document is in Development state. Change should be expected.
 endif::[]
