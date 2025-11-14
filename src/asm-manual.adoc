@@ -1160,6 +1160,7 @@ jalr x0, rt, offset[11:0]
 |jr rs                        | jalr x0, rs, 0                                                | Jump register |
 |jalr rs                      | jalr x1, rs, 0                                                | Jump and link register |
 |ret                          | jalr x0, x1, 0                                                | Return from subroutine |
+|c.ret                        | c.jr x1                                                       | Return from subroutine (compressed) |
 |vfneg.v vd, vs               | vfsgnjn.vv vd, vs, vs                                         | Floating-point vector negate |
 |vfabs.v vd, vs               | vfsgnjx.vv vd, vs, vs                                         | Floating-point vector absolute value |
 |vmclr.m vd                   | vmxor.mm vd, vd, vd                                           | Vector clear mask register |
