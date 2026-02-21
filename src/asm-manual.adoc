@@ -1138,6 +1138,11 @@ srli rd, rd, XLEN - 32
 |fneg.d frd, frs              | fsgnjn.d frd, frs, frs                                        | Double-precision negate |
 |fgt.d rd, frs, frt           | flt.d rd, frt, frs                                            | Double-precision > |
 |fge.d rd, frs, frt           | fle.d rd, frt, frs                                            | Double-precision >= |
+|fmv.q frd, frs               | fsgnj.q frd, frs, frs                                         | Copy quad-precision register |
+|fabs.q frd, frs              | fsgnjx.q frd, frs, frs                                        | Quad-precision absolute value |
+|fneg.q frd, frs              | fsgnjn.q frd, frs, frs                                        | Quad-precision negate |
+|fgt.q rd, frs, frt           | flt.q rd, frt, frs                                            | Quad-precision > |
+|fge.q rd, frs, frt           | fle.q rd, frt, frs                                            | Quad-precision >= |
 |beqz rs, offset              | beq rs, x0, offset                                            | Branch if = zero |
 |bnez rs, offset              | bne rs, x0, offset                                            | Branch if != zero |
 |blez rs, offset              | bge x0, rs, offset                                            | Branch if ≤ zero |
