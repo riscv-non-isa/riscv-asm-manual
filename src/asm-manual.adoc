@@ -1123,6 +1123,8 @@ srli rd, rd, XLEN - 32
 |snez rd, rs                  | sltu rd, x0, rs                                               | Set if != zero |
 |sltz rd, rs                  | slt rd, rs, x0                                                | Set if < zero |
 |sgtz rd, rs                  | slt rd, x0, rs                                                | Set if > zero |
+|sgt  rd, rs, rt              | slt rd, rt, rs                                                | Set if > |
+|sgtu rd, rs, rt              | sltu rd, rt, rs                                               | Set if >, unsigned |
 |fmv.h frd, frs               | fsgnj.h frd, frs, frs                                         | Copy half-precision register |
 |fabs.h frd, frs              | fsgnjx.h frd, frs, frs                                        | Half-precision absolute value |
 |fneg.h frd, frs              | fsgnjn.h frd, frs, frs                                        | Half-precision negate |
