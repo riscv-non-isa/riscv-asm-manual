@@ -1117,7 +1117,12 @@ srli rd, rd, XLEN - 16
 |slli rd, rs, XLEN - 32 +
 srli rd, rd, XLEN - 32
 |Zero extend word
-|This is a single instruction when `Zba` extension is available.
+|When `Zba` extension is not available
+
+|zext.w rd, rs
+|add.uw rd, rs, x0
+|Zero extend word
+|When `Zba` extension is available
 
 |seqz rd, rs                  | sltiu rd, rs, 1                                               | Set if = zero |
 |snez rd, rs                  | sltu rd, x0, rs                                               | Set if != zero |
