@@ -1164,14 +1164,14 @@ srli rd, rd, XLEN - 32
 
 |jump offset, rt
 |auipc rt, offset[31:12] +
-jalr x0, rt, offset[11:0]
+jalr x0, offset[11:0](rt)
 |Jump to far-away label
 |
 
 |jal offset                   | jal x1, offset                                                | Jump and link |
-|jr rs                        | jalr x0, rs, 0                                                | Jump register |
-|jalr rs                      | jalr x1, rs, 0                                                | Jump and link register |
-|ret                          | jalr x0, x1, 0                                                | Return from subroutine |
+|jr rs                        | jalr x0, 0(rs)                                                | Jump register |
+|jalr rs                      | jalr x1, 0(rs)                                                | Jump and link register |
+|ret                          | jalr x0, 0(x1)                                                | Return from subroutine |
 |vfneg.v vd, vs               | vfsgnjn.vv vd, vs, vs                                         | Floating-point vector negate |
 |vfabs.v vd, vs               | vfsgnjx.vv vd, vs, vs                                         | Floating-point vector absolute value |
 |vmclr.m vd                   | vmxor.mm vd, vd, vd                                           | Vector clear mask register |
@@ -1227,19 +1227,19 @@ vmnand.mm vd, vd, vd
 
 |call offset
 |auipc x1, offset[31:12] +
-jalr x1, x1, offset[11:0]
+jalr x1, offset[11:0](x1)
 |Call far-away subroutine
 |
 
 |call rt, offset
 |auipc rt, offset[31:12] +
-jalr rt, rt, offset[11:0]
+jalr rt, offset[11:0](rt)
 |Call far-away subroutine
 |
 
 |tail offset
 |auipc x6, offset[31:12] +
-jalr x0, x6, offset[11:0]
+jalr x0, offset[11:0](x6)
 | Tail call far-away subroutine
 | It will use `x7` as scratch register when `Zicfilp` extension is available.
 
