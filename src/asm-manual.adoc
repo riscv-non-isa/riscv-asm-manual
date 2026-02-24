@@ -1193,10 +1193,10 @@ jalr x0, offset[11:0](rt)
 |vncvt.x.x.w vd,vs,vm         | vnsrl.wx vd,vs,x0,vm                                          | Vector narrow convert element |
 |vwcvt.x.x.v vd,vs,vm         | vwadd.vx vd,vs,x0,vm                                          | Vector widen convert, integer-integer|
 |vwcvtu.x.x.v vd,vs,vm        | vwaddu.vx vd,vs,x0,vm                                         | Vector widen convert, integer-integer, unsigned|
-|vl1r.v v3, x0                | vl1re8.v v3, x0                                               | Equal to vl1re8.v |
-|vl2r.v v2,x0                 | vl2re8.v v2, x0                                               | Equal to vl2re8.v |
-|vl4r.v v4,x0                 | vl4re8.v v4, x0                                               | Equal to vl4re8.v |
-|vl8r.v v8,x0                 | vl8re8.v v8, x0                                               | Equal to vl8re8.v |
+|vl1r.v v3, (rs1)             | vl1re8.v v3, (rs1)                                            | Equal to vl1re8.v |
+|vl2r.v v2, (rs1)             | vl2re8.v v2, (rs1)                                            | Equal to vl2re8.v |
+|vl4r.v v4, (rs1)             | vl4re8.v v4, (rs1)                                            | Equal to vl4re8.v |
+|vl8r.v v8, (rs1)             | vl8re8.v v8, (rs1)                                            | Equal to vl8re8.v |
 
 |vmsge{u}.vx vd, va, x
 |vmslt{u}.vx vd, va, x +
