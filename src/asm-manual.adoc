@@ -1246,29 +1246,45 @@ jalr x0, offset[11:0](x6)
 |fence                        | fence iorw, iorw                                              | Fence on all memory and I/O |
 |pause                        | fence w, 0                                                    | PAUSE hint |
 
-|pmv.bs rd, rs                | padd.bs rd, x0, rs                                            | Move scalar into every element |
-|pmv.hs rd, rs                | padd.hs rd, x0, rs                                            | Move scalar into every element |
-|pmv.ws rd, rs                | padd.ws rd, x0, rs                                            | Move scalar into every element | RV64 only
-|pmv.dbs rd, rs               | padd.dbs rd, x0, rs                                           | Move scalar into every element | RV32 only
-|pmv.dhs rd, rs               | padd.dhs rd, x0, rs                                           | Move scalar into every element | RV32 only
-|pmv.dws rd, rs               | padd.dws rd, x0, rs                                           | Move scalar into every element | RV32 only
-|pneg.b rd, rs                | psub.b rd, x0, rs                                             | Packed two's complement        |
-|pneg.h rd, rs                | psub.h rd, x0, rs                                             | Packed two's complement        |
-|pneg.w rd, rs                | psub.w rd, x0, rs                                             | Packed two's complement        | RV64 only
-|pneg.db rd, rs               | psub.db rd, x0, rs                                            | Packed two's complement        | RV32 only
-|pneg.dh rd, rs               | psub.dh rd, x0, rs                                            | Packed two's complement        | RV32 only
-|pneg.dw rd, rs               | psub.dw rd, x0, rs                                            | Packed two's complement        | RV32 only
-|negd rd, rs                  | psubd rd, x0, rs                                              | Two's complement dword         | RV32 only
-|pabs.b rd, rs                | pabd.b rd, rs, x0                                             | Packed absolute value          |
-|pabs.h rd, rs                | pabd.h rd, rs, x0                                             | Packed absolute value          |
-|pabs.db rd, rs               | pabd.db rd, rs, x0                                            | Packed absolute value          | RV32 only
-|pabs.dh rd, rs               | pabd.dh rd, rs, x0                                            | Packed absolute value          | RV32 only
-|ppaire.h rd, rs1, rs2        | pack rd, rs1, rs2                                             | Packed pair even               | RV32 only
-|ppaire.w rd, rs1, rs2        | pack rd, rs1, rs2                                             | Packed pair even               | RV64 only
-|pzext.h.b rd, rs             | ppaire.b rd, rs, x0                                           | Packed zero extend             |
-|pzext.w.h rd, rs             | ppaire.h rd, rs, x0                                           | Packed zero extend             | RV64 only
-|pzext.dh.b rd, rs            | ppaire.db rd, rs, x0                                          | Packed zero extend             | RV32 only
-|pzext.dw.h rd, rs            | ppaire.dh rd, rs, x0                                          | Packed zero extend             | RV32 only
+|pmv.bs rd, rs                | padd.bs rd, x0, rs                                            | Move scalar into every element    |
+|pmv.hs rd, rs                | padd.hs rd, x0, rs                                            | Move scalar into every element    |
+|pmv.ws rd, rs                | padd.ws rd, x0, rs                                            | Move scalar into every element    | RV64 only
+|pmv.dbs rd, rs               | padd.dbs rd, x0, rs                                           | Move scalar into every element    | RV32 only
+|pmv.dhs rd, rs               | padd.dhs rd, x0, rs                                           | Move scalar into every element    | RV32 only
+|pmv.dws rd, rs               | padd.dws rd, x0, rs                                           | Move scalar into every element    | RV32 only
+|pneg.b rd, rs                | psub.b rd, x0, rs                                             | Packed two's complement           |
+|pneg.h rd, rs                | psub.h rd, x0, rs                                             | Packed two's complement           |
+|pneg.w rd, rs                | psub.w rd, x0, rs                                             | Packed two's complement           | RV64 only
+|pneg.db rd, rs               | psub.db rd, x0, rs                                            | Packed two's complement           | RV32 only
+|pneg.dh rd, rs               | psub.dh rd, x0, rs                                            | Packed two's complement           | RV32 only
+|pneg.dw rd, rs               | psub.dw rd, x0, rs                                            | Packed two's complement           | RV32 only
+|negd rd, rs                  | psubd rd, x0, rs                                              | Two's complement dword            | RV32 only
+|pabs.b rd, rs                | pabd.b rd, rs, x0                                             | Packed absolute value             |
+|pabs.h rd, rs                | pabd.h rd, rs, x0                                             | Packed absolute value             |
+|pabs.db rd, rs               | pabd.db rd, rs, x0                                            | Packed absolute value             | RV32 only
+|pabs.dh rd, rs               | pabd.dh rd, rs, x0                                            | Packed absolute value             | RV32 only
+|ppaire.h rd, rs1, rs2        | pack rd, rs1, rs2                                             | Packed pair even                  | RV32 only
+|ppaire.w rd, rs1, rs2        | pack rd, rs1, rs2                                             | Packed pair even                  | RV64 only
+|pzext.h.b rd, rs             | ppaire.b rd, rs, x0                                           | Packed zero extend                |
+|pzext.w.h rd, rs             | ppaire.h rd, rs, x0                                           | Packed zero extend                | RV64 only
+|pzext.dh.b rd, rs            | ppaire.db rd, rs, x0                                          | Packed zero extend                | RV32 only
+|pzext.dw.h rd, rs            | ppaire.dh rd, rs, x0                                          | Packed zero extend                | RV32 only
+|pwcvt.b rd, rs               | pwadd.b rd, rs, x0                                            | Packed widening convert, signed   | RV32 only
+|pwcvt.h rd, rs               | pwadd.h rd, rs, x0                                            | Packed widening convert, signed   | RV32 only
+|pwcvtu.b rd, rs              | wzip8p rd, rs, x0                                             | Packed widening convert, unsigned | RV32 only
+|pwcvtu.b rd, rs              | zip8p rd, rs, x0                                              | Packed widening convert, unsigned | RV64 only
+|pwcvtu.h rd, rs              | wzip16p rd, rs, x0                                            | Packed widening convert, unsigned | RV32 only
+|pwcvtu.h rd, rs              | zip16p rd, rs, x0                                             | Packed widening convert, unsigned | RV64 only
+|pwcvth.b rd, rs              | zip8p rd, x0, rs                                              | Packed widening convert high      | RV64 only
+|pwcvth.h rd, rs              | zip16p rd, x0, rs                                             | Packed widening convert high      | RV64 only
+|pncvt.b rd, rs               | pnsrli.b rd, rs, 0                                            | Packed narrowing convert          | RV32 only
+|pncvt.b rd, rs               | unzip8p rd, rs, x0                                            | Packed narrowing convert          | RV64 only
+|pncvt.h rd, rs               | pnsrli.h rd, rs, 0                                            | Packed narrowing convert          | RV32 only
+|pncvt.h rd, rs               | unzip16p rd, rs, x0                                           | Packed narrowing convert          | RV64 only
+|pncvth.b rd, rs              | pnsrli.b rd, rs, 8                                            | Packed narrowing convert high     | RV32 only
+|pncvth.b rd, rs              | unzip8hp rd, rs, x0                                           | Packed narrowing convert high     | RV64 only
+|pncvth.h rd, rs              | pnsrli.h rd, rs, 16                                           | Packed narrowing convert high     | RV32 only
+|pncvth.h rd, rs              | unzip16hp rd, rs, x0                                          | Packed narrowing convert high     | RV64 only
 |pmseqz.b rd, rs              | pmseq.b rd, rs, x0                                            | Packed mask-set if = zero      |
 |pmseqz.h rd, rs              | pmseq.h rd, rs, x0                                            | Packed mask-set if = zero      |
 |pmseqz.w rd, rs              | pmseq.w rd, rs, x0                                            | Packed mask-set if = zero      | RV64 only
@@ -1311,6 +1327,7 @@ jalr x0, offset[11:0](x6)
 |msgtz rd, rs                 | mslt rd, x0, rs                                               | Mask-set if > zero             | RV32 only
 |msgt rd, rs, rt              | mslt rd, rt, rs                                               | Mask-set if >                  | RV32 only
 |msgtu rd, rs, rt             | msltu rd, rt, rs                                              | Mask-set if >, unsigned        | RV32 only
+u
 |===
 
 == Pseudoinstructions for accessing control and status registers
