@@ -1170,7 +1170,10 @@ jalr x0, offset[11:0](rt)
 
 |jal offset                   | jal x1, offset                                                | Jump and link |
 |jr rs                        | jalr x0, 0(rs)                                                | Jump register |
+|jr offset(rs)                | jalr x0, offset(rs)                                           | Jump register plus offset |
 |jalr rs                      | jalr x1, 0(rs)                                                | Jump and link register |
+|jalr offset(rs)              | jalr x1, offset(rs)                                           | Jump and link register plus offset |
+|jalr rd, rs                  | jalr rd, 0(rs)                                                | Jump and link register |
 |ret                          | jalr x0, 0(x1)                                                | Return from subroutine |
 |vfneg.v vd, vs               | vfsgnjn.vv vd, vs, vs                                         | Floating-point vector negate |
 |vfabs.v vd, vs               | vfsgnjx.vv vd, vs, vs                                         | Floating-point vector absolute value |
