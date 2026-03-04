@@ -1180,14 +1180,16 @@ jalr x0, offset[11:0](rt)
 |vmmv.m vd, vs                | vmand.mm vd, vs, vs                                           | Vector copy mask register |
 |vmnot.m vd, vs               | vmnand.mm vd, vs, vs                                          | Vector invert mask bits|
 |vmset.m vd                   | vmxnor.mm vd, vd, vd                                          | Vector set all mask bits|
-|vmsge.vi vd, va, i, vm       | vmsgt.vi vd, va, i-1, vm                                      | Vector >= Immediate|
-|vmsgeu.vi vd, va, i, vm      | vmsgtu.vi vd, va, i-1, vm                                     | Vector >= Immediate, unsigned|
+|vmsge.vi vd, va, i, vm       | vmsgt.vi vd, va, i-1, vm                                      | Vector >= Immediate| When -15 <= i <= 16
+|vmsgeu.vi vd, va, i, vm      | vmsgtu.vi vd, va, i-1, vm                                     | Vector >= Immediate, unsigned| When i != 0 and -15 <= i <= 16
+|vmsgeu.vi vd, va, 0, vm      | vmseq.vv vd, va, va, vm                                       | Vector >= Immediate, unsigned| Sets active elements to true
 |vmsge.vv vd, va, vb, vm      | vmsle.vv vd, vb, va, vm                                       | Vector >= Vector|
 |vmsgeu.vv vd, va, vb, vm     | vmsleu.vv vd, vb, va, vm                                      | Vector >= Vector, unsigned |
 |vmsgt.vv vd, va, vb, vm      | vmslt.vv vd, vb, va, vm                                       | Vector > Vector|
 |vmsgtu.vv vd, va, vb, vm     | vmsltu.vv vd, vb, va, vm                                      | Vector > Vector, unsigned|
-|vmslt.vi vd, va, i, vm       | vmsle.vi vd, va, i-1, vm                                      | Vector < immediate|
-|vmsltu.vi vd, va, i, vm      | vmsleu.vi vd, va, i-1, vm                                     | Vector < immediate, unsigned |
+|vmslt.vi vd, va, i, vm       | vmsle.vi vd, va, i-1, vm                                      | Vector < immediate| When -15 <= i <= 16
+|vmsltu.vi vd, va, i, vm      | vmsleu.vi vd, va, i-1, vm                                     | Vector < immediate, unsigned | When i != 0 and -15 <= i <= 16
+|vmsltu.vi vd, va, 0, vm      | vmsne.vv vd, va, va, vm                                       | Vector < immediate, unsigned | Sets active elements to false
 |vneg.v vd,vs                 | vrsub.vx vd,vs,x0                                             | Vector negate |
 |vnot.v vd,vs,vm              | vxor.vi vd, vs, -1, vm                                        | Vector not |
 |vncvt.x.x.w vd,vs,vm         | vnsrl.wx vd,vs,x0,vm                                          | Vector narrow convert element |
