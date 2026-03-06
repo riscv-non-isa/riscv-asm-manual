@@ -37,7 +37,7 @@ jobs:
     steps:
       # Checkout the repository
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: recursive
 
@@ -65,7 +65,7 @@ jobs:
 
       # Upload the built PDF files as a single artifact
       - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: Build Artifacts
           path: ${{ github.workspace }}/build/*.pdf
@@ -73,7 +73,7 @@ jobs:
 
       # Create Release
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: ${{ github.workspace }}/build/*.pdf
           tag_name: v${{ steps.version.outputs.version }}
