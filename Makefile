@@ -16,7 +16,7 @@ DOCS := \
 	riscv-asm.adoc
 
 DATE ?= $(shell date +%Y-%m-%d)
-DOCKER_IMG := riscvintl/riscv-docs-base-container-image:latest
+DOCKER_IMG := ghcr.io/riscv/riscv-docs-base-container-image:latest
 
 ifneq ($(SKIP_DOCKER),true)
 	DOCKER_CMD := docker run --rm -v ${PWD}:/build -w /build \
