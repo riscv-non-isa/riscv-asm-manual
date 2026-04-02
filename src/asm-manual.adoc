@@ -1250,6 +1250,90 @@ jalr x0, offset[11:0](x6)
 
 |fence                        | fence iorw, iorw                                              | Fence on all memory and I/O |
 |pause                        | fence w, 0                                                    | PAUSE hint |
+
+|pmv.bs rd, rs                | padd.bs rd, x0, rs                                            | Move scalar into every element    |
+|pmv.hs rd, rs                | padd.hs rd, x0, rs                                            | Move scalar into every element    |
+|pmv.ws rd, rs                | padd.ws rd, x0, rs                                            | Move scalar into every element    | RV64 only
+|pmv.dbs rd_p, rs             | padd.dbs rd_p, x0, rs                                         | Move scalar into every element    | RV32 only
+|pmv.dhs rd_p, rs             | padd.dhs rd_p, x0, rs                                         | Move scalar into every element    | RV32 only
+|pmv.dws rd_p, rs             | padd.dws rd_p, x0, rs                                         | Move scalar into every element    | RV32 only
+|pneg.b rd, rs                | psub.b rd, x0, rs                                             | Packed two's complement           |
+|pneg.h rd, rs                | psub.h rd, x0, rs                                             | Packed two's complement           |
+|pneg.w rd, rs                | psub.w rd, x0, rs                                             | Packed two's complement           | RV64 only
+|pneg.db rd, rs               | psub.db rd, x0, rs                                            | Packed two's complement           | RV32 only
+|pneg.dh rd, rs               | psub.dh rd, x0, rs                                            | Packed two's complement           | RV32 only
+|pneg.dw rd, rs               | psub.dw rd, x0, rs                                            | Packed two's complement           | RV32 only
+|negd rd, rs                  | subd rd, x0, rs                                               | Two's complement dword            | RV32 only
+|pabs.b rd, rs                | pabd.b rd, rs, x0                                             | Packed absolute value             |
+|pabs.h rd, rs                | pabd.h rd, rs, x0                                             | Packed absolute value             |
+|pabs.db rd_p, rs_p           | pabd.db rd_p, rs_p, x0                                        | Packed absolute value             | RV32 only
+|pabs.dh rd_p, rs_p           | pabd.dh rd_p, rs_p, x0                                        | Packed absolute value             | RV32 only
+|ppaire.h rd, rs1, rs2        | pack rd, rs1, rs2                                             | Packed pair even                  | RV32 only
+|ppaire.w rd, rs1, rs2        | pack rd, rs1, rs2                                             | Packed pair even                  | RV64 only
+|pzext.h.b rd, rs             | ppaire.b rd, rs, x0                                           | Packed zero extend                |
+|pzext.w.h rd, rs             | ppaire.h rd, rs, x0                                           | Packed zero extend                | RV64 only
+|pzext.dh.b rd_p, rs_p        | ppaire.db rd_p, rs_p, x0                                      | Packed zero extend                | RV32 only
+|pzext.dw.h rd_p, rs_p        | ppaire.dh rd_p, rs_p, x0                                      | Packed zero extend                | RV32 only
+|pwcvt.b rd_p, rs             | pwadd.b rd_p, rs, x0                                          | Packed widening convert, signed   | RV32 only
+|pwcvt.h rd_p, rs             | pwadd.h rd_p, rs, x0                                          | Packed widening convert, signed   | RV32 only
+|pwcvtu.b rd_p, rs            | wzip8p rd_p, rs, x0                                           | Packed widening convert, unsigned | RV32 only
+|pwcvtu.b rd, rs              | zip8p rd, rs, x0                                              | Packed widening convert, unsigned | RV64 only
+|pwcvtu.h rd_p, rs            | wzip16p rd_p, rs, x0                                          | Packed widening convert, unsigned | RV32 only
+|pwcvtu.h rd, rs              | zip16p rd, rs, x0                                             | Packed widening convert, unsigned | RV64 only
+|pwcvth.b rd_p, rs            | wzip8p rd_p, x0, rs                                           | Packed widening convert high      | RV32 only
+|pwcvth.b rd, rs              | zip8p rd, x0, rs                                              | Packed widening convert high      | RV64 only
+|pwcvth.h rd_p, rs            | wzip16p rd_p, x0, rs                                          | Packed widening convert high      | RV32 only
+|pwcvth.h rd, rs              | zip16p rd, x0, rs                                             | Packed widening convert high      | RV64 only
+|pncvt.b rd, rs_p             | pnsrli.b rd, rs_p, 0                                          | Packed narrowing convert          | RV32 only
+|pncvt.b rd, rs               | unzip8p rd, rs, x0                                            | Packed narrowing convert          | RV64 only
+|pncvt.h rd, rs_p             | pnsrli.h rd, rs_p, 0                                          | Packed narrowing convert          | RV32 only
+|pncvt.h rd, rs               | unzip16p rd, rs, x0                                           | Packed narrowing convert          | RV64 only
+|pncvth.b rd, rs_p            | pnsrli.b rd, rs_p, 8                                          | Packed narrowing convert high     | RV32 only
+|pncvth.b rd, rs              | unzip8hp rd, rs, x0                                           | Packed narrowing convert high     | RV64 only
+|pncvth.h rd, rs_p            | pnsrli.h rd, rs_p, 16                                         | Packed narrowing convert high     | RV32 only
+|pncvth.h rd, rs              | unzip16hp rd, rs, x0                                          | Packed narrowing convert high     | RV64 only
+|pmseqz.b rd, rs              | pmseq.b rd, rs, x0                                            | Packed mask-set if = zero         |
+|pmseqz.h rd, rs              | pmseq.h rd, rs, x0                                            | Packed mask-set if = zero         |
+|pmseqz.w rd, rs              | pmseq.w rd, rs, x0                                            | Packed mask-set if = zero         | RV64 only
+|pmseqz.db rd_p, rs_p         | pmseq.db rd_p, rs_p, x0                                       | Packed mask-set if = zero         | RV32 only
+|pmseqz.dh rd_p, rs_p         | pmseq.dh rd_p, rs_p, x0                                       | Packed mask-set if = zero         | RV32 only
+|pmseqz.dw rd_p, rs_p         | pmseq.dw rd_p, rs_p, x0                                       | Packed mask-set if = zero         | RV32 only
+|pmsnez.b rd, rs              | pmsltu.b rd, x0, rs                                           | Packed mask-set if != zero        |
+|pmsnez.h rd, rs              | pmsltu.h rd, x0, rs                                           | Packed mask-set if != zero        |
+|pmsnez.w rd, rs              | pmsltu.w rd, x0, rs                                           | Packed mask-set if != zero        | RV64 only
+|pmsnez.db rd_p, rs_p         | pmsltu.db rd_p, x0, rs_p                                      | Packed mask-set if != zero        | RV32 only
+|pmsnez.dh rd_p, rs_p         | pmsltu.dh rd_p, x0, rs_p                                      | Packed mask-set if != zero        | RV32 only
+|pmsnez.dw rd_p, rs_p         | pmsltu.dw rd_p, x0, rs_p                                      | Packed mask-set if != zero        | RV32 only
+|pmsltz.b rd, rs              | pmslt.b rd, rs, x0                                            | Packed mask-set if < zero         |
+|pmsltz.h rd, rs              | pmslt.h rd, rs, x0                                            | Packed mask-set if < zero         |
+|pmsltz.w rd, rs              | pmslt.w rd, rs, x0                                            | Packed mask-set if < zero         | RV64 only
+|pmsltz.db rd_p, rs_p         | pmslt.db rd_p, rs_p, x0                                       | Packed mask-set if < zero         | RV32 only
+|pmsltz.dh rd_p, rs_p         | pmslt.dh rd_p, rs_p, x0                                       | Packed mask-set if < zero         | RV32 only
+|pmsltz.dw rd_p, rs_p         | pmslt.dw rd_p, rs_p, x0                                       | Packed mask-set if < zero         | RV32 only
+|pmsgtz.b rd, rs              | pmslt.b rd, x0, rs                                            | Packed mask-set if > zero         |
+|pmsgtz.h rd, rs              | pmslt.h rd, x0, rs                                            | Packed mask-set if > zero         |
+|pmsgtz.w rd, rs              | pmslt.w rd, x0, rs                                            | Packed mask-set if > zero         | RV64 only
+|pmsgtz.db rd_p, rs_p         | pmslt.db rd_p, x0, rs_p                                       | Packed mask-set if > zero         | RV32 only
+|pmsgtz.dh rd_p, rs_p         | pmslt.dh rd_p, x0, rs_p                                       | Packed mask-set if > zero         | RV32 only
+|pmsgtz.dw rd_p, rs_p         | pmslt.dw rd_p, x0, rs_p                                       | Packed mask-set if > zero         | RV32 only
+|pmsgt.b rd, rs, rt           | pmslt.b rd, rt, rs                                            | Packed mask-set if >              |
+|pmsgt.h rd, rs, rt           | pmslt.h rd, rt, rs                                            | Packed mask-set if >              |
+|pmsgt.w rd, rs, rt           | pmslt.w rd, rt, rs                                            | Packed mask-set if >              | RV64 only
+|pmsgt.db rd_p, rs_p, rt_p    | pmslt.db rd_p, rt_p, rs_p                                     | Packed mask-set if >              | RV32 only
+|pmsgt.dh rd_p, rs_p, rt_p    | pmslt.dh rd_p, rt_p, rs_p                                     | Packed mask-set if >              | RV32 only
+|pmsgt.dw rd_p, rs_p, rt_p    | pmslt.dw rd_p, rt_p, rs_p                                     | Packed mask-set if >              | RV32 only
+|pmsgtu.b rd, rs, rt          | pmsltu.b rd, rt, rs                                           | Packed mask-set if >, unsigned    |
+|pmsgtu.h rd, rs, rt          | pmsltu.h rd, rt, rs                                           | Packed mask-set if >, unsigned    |
+|pmsgtu.w rd, rs, rt          | pmsltu.w rd, rt, rs                                           | Packed mask-set if >, unsigned    | RV64 only
+|pmsgtu.db rd_p, rs_p, rt_p   | pmsltu.db rd_p, rt_p, rs_p                                    | Packed mask-set if >, unsigned    | RV32 only
+|pmsgtu.dh rd_p, rs_p, rt_p   | pmsltu.dh rd_p, rt_p, rs_p                                    | Packed mask-set if >, unsigned    | RV32 only
+|pmsgtu.dw rd_p, rs_p, rt_p   | pmsltu.dw rd_p, rt_p, rs_p                                    | Packed mask-set if >, unsigned    | RV32 only
+|mseqz rd, rs                 | mseq rd, rs, x0                                               | Mask-set if = zero                | RV32 only
+|msnez rd, rs                 | msltu rd, x0, rs                                              | Mask-set if != zero               | RV32 only
+|msltz rd, rs                 | mslt rd, rs, x0                                               | Mask-set if < zero                | RV32 only
+|msgtz rd, rs                 | mslt rd, x0, rs                                               | Mask-set if > zero                | RV32 only
+|msgt rd, rs, rt              | mslt rd, rt, rs                                               | Mask-set if >                     | RV32 only
+|msgtu rd, rs, rt             | msltu rd, rt, rs                                              | Mask-set if >, unsigned           | RV32 only
 |===
 
 == Pseudoinstructions for accessing control and status registers
