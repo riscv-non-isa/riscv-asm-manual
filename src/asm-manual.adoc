@@ -799,7 +799,7 @@ footnote:fn-1[the first operand is implicitly used as a scratch register.]
 * `l{bu|hu|wu} <rd>, <symbol expression>`: load unsigned byte, half word, or word from global{empty}
 footnote:fn-1[]
 * `s{b|h|w|d} <rd>, <symbol expression>, <rt>`: store byte, half word, word or double word to global{empty}
-footnote:fn-2[the last operand specifies the scratch register to be used.]
+footnote:fn-2[the last operand specifies a scratch register used by the pseudo; its value is unpredictable following the pseudo.]
 * `fl{h|w|d|q} <rd>, <symbol expression>, <rt>`: load half, float, double or quad precision from global{empty}
 footnote:fn-2[]
 * `fs{h|w|d|q} <rd>, <symbol expression>, <rt>`: store half, float, double or quad precision to global{empty}
