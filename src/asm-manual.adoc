@@ -1272,21 +1272,21 @@ jalr x0, offset[11:0](x6)
 |pwcvt.b rd_p, rs             | pwadd.b rd_p, rs, x0                                          | Packed widening convert, signed   | RV32 only
 |pwcvt.h rd_p, rs             | pwadd.h rd_p, rs, x0                                          | Packed widening convert, signed   | RV32 only
 |pwcvtu.b rd_p, rs            | wzip8p rd_p, rs, x0                                           | Packed widening convert, unsigned | RV32 only
-|pwcvtu.b rd, rs              | zip8p rd, rs, x0                                              | Packed widening convert, unsigned | RV64 only
 |pwcvtu.h rd_p, rs            | wzip16p rd_p, rs, x0                                          | Packed widening convert, unsigned | RV32 only
-|pwcvtu.h rd, rs              | zip16p rd, rs, x0                                             | Packed widening convert, unsigned | RV64 only
+|pwcvtu.wb rd, rs             | zip8p rd, rs, x0                                              | Packed widening convert, unsigned | RV64 only
+|pwcvtu.wh rd, rs             | zip16p rd, rs, x0                                             | Packed widening convert, unsigned | RV64 only
 |pwcvth.b rd_p, rs            | wzip8p rd_p, x0, rs                                           | Packed widening convert high      | RV32 only
-|pwcvth.b rd, rs              | zip8p rd, x0, rs                                              | Packed widening convert high      | RV64 only
 |pwcvth.h rd_p, rs            | wzip16p rd_p, x0, rs                                          | Packed widening convert high      | RV32 only
-|pwcvth.h rd, rs              | zip16p rd, x0, rs                                             | Packed widening convert high      | RV64 only
+|pwcvth.wb rd, rs             | zip8p rd, x0, rs                                              | Packed widening convert high      | RV64 only
+|pwcvth.wh rd, rs             | zip16p rd, x0, rs                                             | Packed widening convert high      | RV64 only
 |pncvt.b rd, rs_p             | pnsrli.b rd, rs_p, 0                                          | Packed narrowing convert          | RV32 only
-|pncvt.b rd, rs               | unzip8p rd, rs, x0                                            | Packed narrowing convert          | RV64 only
 |pncvt.h rd, rs_p             | pnsrli.h rd, rs_p, 0                                          | Packed narrowing convert          | RV32 only
-|pncvt.h rd, rs               | unzip16p rd, rs, x0                                           | Packed narrowing convert          | RV64 only
+|pncvt.wb rd, rs              | unzip8p rd, rs, x0                                            | Packed narrowing convert          | RV64 only
+|pncvt.wh rd, rs              | unzip16p rd, rs, x0                                           | Packed narrowing convert          | RV64 only
 |pncvth.b rd, rs_p            | pnsrli.b rd, rs_p, 8                                          | Packed narrowing convert high     | RV32 only
-|pncvth.b rd, rs              | unzip8hp rd, rs, x0                                           | Packed narrowing convert high     | RV64 only
 |pncvth.h rd, rs_p            | pnsrli.h rd, rs_p, 16                                         | Packed narrowing convert high     | RV32 only
-|pncvth.h rd, rs              | unzip16hp rd, rs, x0                                          | Packed narrowing convert high     | RV64 only
+|pncvth.wb rd, rs             | unzip8hp rd, rs, x0                                           | Packed narrowing convert high     | RV64 only
+|pncvth.wh rd, rs             | unzip16hp rd, rs, x0                                          | Packed narrowing convert high     | RV64 only
 |pmseqz.b rd, rs              | pmseq.b rd, rs, x0                                            | Packed mask-set if = zero         |
 |pmseqz.h rd, rs              | pmseq.h rd, rs, x0                                            | Packed mask-set if = zero         |
 |pmseqz.w rd, rs              | pmseq.w rd, rs, x0                                            | Packed mask-set if = zero         | RV64 only
@@ -1329,6 +1329,7 @@ jalr x0, offset[11:0](x6)
 |msgtz rd, rs                 | mslt rd, x0, rs                                               | Mask-set if > zero                | RV32 only
 |msgt rd, rs, rt              | mslt rd, rt, rs                                               | Mask-set if >                     | RV32 only
 |msgtu rd, rs, rt             | msltu rd, rt, rs                                              | Mask-set if >, unsigned           | RV32 only
+|mvd rd_p, rs_p               | padd.dw rd_p, x0, rs_p                                        | Move GPR pair                     | RV32 only
 |===
 
 == Pseudoinstructions for accessing control and status registers
