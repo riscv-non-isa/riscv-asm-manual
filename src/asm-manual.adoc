@@ -232,6 +232,7 @@ The following table lists assembler directives:
 |.variant_cc  | symbol_name                    | annotate the symbol with variant calling convention
 |.attribute   | name, value                    | RISC-V object attributes, more detailed description see <<.attribute, .attribute>>.
 | .insn        | see description                | emit a custom instruction encoding, see <<.insn, .insn>>
+|.lpad_info   | symbol_name, "function-sig", lpad-value | emit landing pad information
 |===
 
 [id=.align]
@@ -482,6 +483,30 @@ Gets listed as follows:
 
 For more examples, refer to the
 https://sourceware.org/binutils/docs/as/RISC_002dV_002dFormats.html[Binutils documentation].
+
+[id=.lpadinfo]
+== `.lpad_info`
+
+This directive will emit new entry to the landing pad information section
+(`.riscv.lpadinfo`). The landing pad information section is used to generating
+function signature based PLT entries. Every global function and weak function
+with a PLT entry should have a landing pad information entry.
+
+First field is the function name, second field is the function signature, and
+the third field is the landing pad hash value. The function signature can be an
+empty string since that field is provided for debugging purposes only.
+
+Example:
+
+[source, asm]
+----
+.lpad_info foo, "$xFvvE", %lpad_hash("FvvE") # foo is a function with signature FvvE.
+.lpad_info bar, "$xFvvE", 1                  # bar is a function with signature FvvE,
+                                             # but landing pad label is fixed to 1.
+.lpad_info func, "", %lpad_hash("FvvE")      # func is a function with signature FvvE.
+                                             # but the function signature is empty.
+----
+
 
 == Assembler Relocation Functions
 
