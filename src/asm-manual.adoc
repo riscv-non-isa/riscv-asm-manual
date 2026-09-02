@@ -908,8 +908,10 @@ footnote:fn-3[`ra` is implicitly used to save the return address.]
 footnote:fn-4[similar to `call <symbol>`, but `<rd>` is used to save the return address instead.]
 * `tail <symbol>`: tail call away subroutine{empty}
 footnote:fn-5[If the `Zicfilp` extension is available, `t2` is implicitly used as a scratch register. Otherwise,`t1` is implicitly used as a scratch register.]
+* `tail <symbol>, <rt>`: tail call away subroutine{empty}
+footnote:fn-6[`<rt>` is implicitly used as a scratch register.]
 * `jump <symbol>, <rt>`: jump to far-away label{empty}
-footnote:fn-6[similar to `tail <symbol>`, but `<rt>` is used as the scratch register instead.]
+footnote:fn-7[similar to `tail <symbol>`, but `<rt>` is used as the scratch register instead.]
 
 The following example shows how these pseudoinstructions are used:
 
@@ -1024,7 +1026,7 @@ fail_msg:
 [id=pseudoinstructions]
 == A listing of standard RISC-V pseudoinstructions
 
-:fn-7: footnote:[The compiler can generate different instruction sequences to load a specific numeric value into a register.]
+:fn-8: footnote:[The compiler can generate different instruction sequences to load a specific numeric value into a register.]
 
 .Pseudo Instructions
 [cols="30,35,20,15"]
@@ -1086,7 +1088,7 @@ fs{h\|w\|d\|q} rd, symbol[11:0](rt)
 |
 
 |nop                          | addi x0, x0, 0                                                | No operation |
-|li rd, immediate             | *Myriad sequences{fn-7}                                       | Load immediate |
+|li rd, immediate             | *Myriad sequences{fn-8}                                       | Load immediate |
 |mv rd, rs                    | addi rd, rs, 0                                                | Copy register |
 |not rd, rs                   | xori rd, rs, -1                                               | Ones’ complement |
 |neg rd, rs                   | sub rd, x0, rs                                                | Two’s complement |
@@ -1247,6 +1249,12 @@ jalr rt, offset[11:0](rt)
 jalr x0, offset[11:0](x6)
 | Tail call far-away subroutine
 | It will use `x7` as scratch register when `Zicfilp` extension is available.
+
+|tail offset, rt
+|auipc rt, offset[31:12] +
+jalr x0, offset[11:0](rt)
+| Tail call far-away subroutine using rt as scratch.
+|
 
 |fence                        | fence iorw, iorw                                              | Fence on all memory and I/O |
 |pause                        | fence w, 0                                                    | PAUSE hint |
