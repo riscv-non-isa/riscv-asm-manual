@@ -1146,6 +1146,8 @@ Tail call far-away subroutine
 | It will use `x7` as scratch register when `Zicfilp` extension is available.
 
 |fence                        | fence iorw, iorw                                              | Fence on all memory and I/O |
+|sfence.vma                   | sfence.vma x0, x0                                             | Fence address translations for all addresses and ASIDs |
+|sfence.vma rs1               | sfence.vma rs1, x0                                            | Fence address translations for the address in rs1 across all ASIDs |
 |pause                        | fence w, 0                                                    | PAUSE hint |
 |===
 
